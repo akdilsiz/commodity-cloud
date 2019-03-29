@@ -12,12 +12,25 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-##   
-defmodule Commodity.Api.Util.InvalidVirtualChangesetError do
-  defexception [:changeset, plug_status: 422, message: "invalid payload"]
+##
+defmodule Commodity.LibraryCase do
+	@moduledoc """
+	This module defines the test case to be used by
+	library tests.
 
-  def message(%{changeset: changeset}) do
-    Ecto.InvalidChangesetError.message(%{action: :submission,
-                                          changeset: changeset})
-  end
+	You may define functions here to be used as helpers in
+	your library tests.
+
+	Finally, if the test case interacts with the database,
+	it cannot be async. For this reason, every test runs
+	inside a transaction which is reset at the beginning
+	of the test unless the test case is marked as async.
+	"""
+	use ExUnit.CaseTemplate
+
+	using do
+		quote do
+			alias Commodity.Util.Type.String
+		end
+	end
 end

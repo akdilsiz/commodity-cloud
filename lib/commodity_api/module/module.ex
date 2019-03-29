@@ -12,12 +12,20 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-##   
-defmodule Commodity.Api.Util.InvalidVirtualChangesetError do
-  defexception [:changeset, plug_status: 422, message: "invalid payload"]
+## 
+defmodule Commodity.Api.Module do
+	use Commodity.Api, :model
 
-  def message(%{changeset: changeset}) do
-    Ecto.InvalidChangesetError.message(%{action: :submission,
-                                          changeset: changeset})
-  end
+	schema "modules" do
+		field :name, :string
+		field :controller, :string
+
+		timestamps()
+	end
+
+	def changeset(struct, params \\ %{}) do
+		struct
+		|> cast(params, [:name, :controller])
+		|> validate_required([:name, :controller])
+	end
 end

@@ -86,7 +86,7 @@ defmodule Commodity.MixProject do
       {:rediscl, "~> 0.1"},
       {:slugger, "~> 0.3"},
       {:lager, "~> 3.6"},
-      {:httpoison, "~> 1.4"},
+      {:httpoison, "~> 1.5"},
       {:sweet_xml, "~> 0.6.5"},
       {:html_sanitize_ex, "~> 1.3"}
     ]

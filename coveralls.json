@@ -1,0 +1,40 @@
+{
+  "custom_stop_words": [
+    "embedded_schema",
+    "schema",
+    "defmacro",
+    "defenum",
+    "using",
+    "setup",
+    "def.+options"
+  ],
+  "coverage_options": {
+    "treat_no_relevant_lines_as_covered": true,
+    "output_dir": "coverage/"
+  },
+  "terminal_options": {
+    "file_column_width": 80
+  },
+  "skip_files": [
+    "lib/mix",
+    "test/support",
+    "lib/commodity/amqp",
+    "lib/commodity/logger",
+    "lib/commodity/application.ex",
+    "lib/commodity_api/endpoint.ex",
+    "lib/commodity_api/socket.ex",
+    "lib/commodity/elastic",
+    "lib/commodity/repo.ex",
+    "lib/commodity_api/util",
+    "lib/commodity.ex",
+    "lib/commodity_api.ex",
+    "lib/commodity_api/router.ex",
+    "lib/commodity_api/gettext.ex",
+    "lib/commodity_api/commodity_api.ex",
+    "deps/postgrex/lib/postgrex/type_module.ex",
+    "lib/commodity/generic/time_information_plug.ex",
+    "lib/commodity/generic/clean_third_party_db.ex",
+    "lib/commodity/generic/plug/public_ip.ex",
+    "lib/mix"
+  ]
+}

@@ -20,8 +20,8 @@ defmodule Commodity.Elastic do
   alias Commodity.Request
   import Commodity.Elastic.Script, only: [generate: 3]
 
-  @elastic_host Application.get_env(:Commodity, :elasticsearch, nil)[:host]
-  @elastic_port Application.get_env(:Commodity, :elasticsearch, nil)[:port]
+  @elastic_host Application.get_env(:commodity, :elasticsearch, nil)[:host]
+  @elastic_port Application.get_env(:commodity, :elasticsearch, nil)[:port]
 
   @spec client :: atom
   def client do

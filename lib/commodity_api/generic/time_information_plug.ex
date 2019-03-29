@@ -13,11 +13,19 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ##   
-defmodule Commodity.Api.Util.InvalidVirtualChangesetError do
-  defexception [:changeset, plug_status: 422, message: "invalid payload"]
+defmodule Commodity.Api.Generic.TimeInformationPlug do
+	@moduledoc """
+	Timeinformation plug
+	"""
 
-  def message(%{changeset: changeset}) do
-    Ecto.InvalidChangesetError.message(%{action: :submission,
-                                          changeset: changeset})
-  end
+	import Plug.Conn, only: [assign: 3]
+
+	def init(default), do: default
+
+	def call(conn, _opts) do
+		conn
+		|> assign(:time_information, 
+				%{zone: "UTC",
+				timestamp: NaiveDateTime.to_iso8601(NaiveDateTime.utc_now)})
+	end
 end

@@ -13,11 +13,24 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ##   
-defmodule Commodity.Api.Util.InvalidVirtualChangesetError do
-  defexception [:changeset, plug_status: 422, message: "invalid payload"]
+defmodule Commodity.Api.Generic.CleanThirdpartyDb do
+	@moduledoc """
+	Clean Third-Party DB systems
+	"""
+	alias Commodity.Elastic
 
-  def message(%{changeset: changeset}) do
-    Ecto.InvalidChangesetError.message(%{action: :submission,
-                                          changeset: changeset})
-  end
+	def clean_and_generate do
+		clean()
+	end
+
+	defp clean do
+		# Clean Redis Db
+		Rediscl.Query.command("FLUSHDB")
+
+		# Find a elastic indexes and remove indexes
+		Elastic.get("/_mapping")
+		|> elem(1)
+		|> Map.keys
+		|> Enum.each(fn x -> {:ok, _} = Elastic.delete("/" <> x) end)
+	end
 end

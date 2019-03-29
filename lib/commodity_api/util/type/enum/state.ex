@@ -13,11 +13,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ##   
-defmodule Commodity.Api.Util.InvalidVirtualChangesetError do
-  defexception [:changeset, plug_status: 422, message: "invalid payload"]
-
-  def message(%{changeset: changeset}) do
-    Ecto.InvalidChangesetError.message(%{action: :submission,
-                                          changeset: changeset})
-  end
-end
+import EctoEnum
+defenum Commodity.Api.Util.Type.Enum.State,
+	:state, [:active, :passive, :bannder, :deleted, :wait_for_confirmation]

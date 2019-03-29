@@ -32,9 +32,9 @@
     "lib/commodity_api/gettext.ex",
     "lib/commodity_api/commodity_api.ex",
     "deps/postgrex/lib/postgrex/type_module.ex",
-    "lib/commodity/generic/time_information_plug.ex",
-    "lib/commodity/generic/clean_third_party_db.ex",
-    "lib/commodity/generic/plug/public_ip.ex",
+    "lib/commodity_api/generic/time_information_plug.ex",
+    "lib/commodity_api/generic/clean_third_party_db.ex",
+    "lib/commodity_api/generic/plug/public_ip.ex",
     "lib/mix"
   ]
 }

@@ -26,8 +26,8 @@ config :logger, level: :warn
 
 # Configure your database
 config :commodity, Commodity.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "commodity",
+  password: "commodity",
   database: "commodity_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

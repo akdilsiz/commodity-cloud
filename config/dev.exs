@@ -86,8 +86,8 @@ config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
 config :commodity, Commodity.Repo,
-  username: "postgres",
-  password: "postgres",
+  username: "commodity",
+  password: "commodity",
   database: "commodity_dev",
   hostname: "localhost",
   pool_size: 10

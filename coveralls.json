@@ -35,6 +35,7 @@
     "lib/commodity_api/generic/time_information_plug.ex",
     "lib/commodity_api/generic/clean_third_party_db.ex",
     "lib/commodity_api/generic/plug/public_ip.ex",
+    "lib/commodity_api/generic/module_generate.ex",
     "lib/mix"
   ]
 }

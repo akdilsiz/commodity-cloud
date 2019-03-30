@@ -17,7 +17,6 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
 															on_delete: :delete_all,
 															on_update: :update_all),
 															null: false
-			add :username, :string, size: 24, null: true
   		add :given_name, :string, size: 64, null: false
   		add :family_name, :string, size: 64, null: false
   		add :gender, :gender, default: "not_specified"
@@ -27,7 +26,6 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
   	end
 
   	create index(:user_personal_informations, [:user_id], using: :btree)
-  	create index(:user_personal_informations, [:username], using: :btree)
   	create index(:user_personal_informations, [:gender], using: :btree)
   	create index(:user_personal_informations, [:nationality], using: :btree)
 

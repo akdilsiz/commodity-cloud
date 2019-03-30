@@ -16,11 +16,12 @@
 defmodule Commodity.Api.Iam.User.PersonalInformation do
 	use Commodity.Api, :model
 
-	@derive {Jason.Encoder, only: [:id, :user_id, :given_name, :family_name,
-		:gender, :nationality, :birthday, :isnerted_at]}
+	@derive {Jason.Encoder, only: [:id, :user_id, :source_user_id, :given_name, 
+		:family_name, :gender, :nationality, :birthday, :isnerted_at]}
 
 	schema "user_personal_informations" do
 		belongs_to :user, Commodity.Api.Iam.User
+		belongs_to :source_user, Commodity.Api.Iam.User
 
 		field :given_name, :string
 		field :family_name, :string
@@ -35,11 +36,12 @@ defmodule Commodity.Api.Iam.User.PersonalInformation do
 
 	def changeset(struct, params \\ %{}) do
 		struct
-		|> cast(params, [:user_id, :given_name, :family_name,
+		|> cast(params, [:user_id, :source_user_id, :given_name, :family_name,
 			:gender, :nationality, :birthday])
-		|> validate_required([:user_id, :given_name, :family_name])
+		|> validate_required([:user_id, :source_user_id, :given_name, :family_name])
 		|> validate_length(:given_name, min: 3, max: 64)
 		|> validate_length(:family_name, min: 3, max: 64)
 		|> foreign_key_constraint(:user_id)
+		|> foreign_key_constraint(:source_user_id)
 	end
 end

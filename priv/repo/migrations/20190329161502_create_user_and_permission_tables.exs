@@ -17,6 +17,10 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
 															on_delete: :delete_all,
 															on_update: :update_all),
 															null: false
+      add :source_user_id, references(:users,
+        on_delete: :nilify_all,
+        on_update: :update_all),
+        null: true
   		add :given_name, :string, size: 64, null: false
   		add :family_name, :string, size: 64, null: false
   		add :gender, :gender, default: "not_specified"
@@ -26,7 +30,8 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
   	end
 
   	create index(:user_personal_informations, [:user_id], using: :btree)
-  	create index(:user_personal_informations, [:gender], using: :btree)
+    create index(:user_personal_informations, [:source_user_id], using: :btree)
+    create index(:user_personal_informations, [:gender], using: :btree)
   	create index(:user_personal_informations, [:nationality], using: :btree)
 
   	create table(:user_emails) do
@@ -34,12 +39,13 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
   														on_delete: :delete_all,
   														on_update: :update_all),
   														null: false
-			add :email, :string, size: 64, null: false
+			add :value, :string, size: 64, null: false
 			timestamps()
   	end
 
   	create index(:user_emails, [:user_id], using: :btree)
-  	create unique_index(:user_emails, [:email], using: :btree)
+  	create unique_index(:user_emails, [:value], using: :btree,
+      name: :user_emails_value_unique)
 
   	create table(:user_email_primaries, primary_key: false) do
   		add :email_id, references(:user_emails,

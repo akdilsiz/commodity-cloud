@@ -19,4 +19,20 @@ defmodule Commodity.Factory do
 	"""
 	use ExMachina.Ecto, repo: Commodity.Repo
 
+	def user_factory do
+		%Commodity.Api.Iam.User{}
+	end
+
+	def user_personal_information_factory do
+		%Commodity.Api.Iam.User.PersonalInformation{
+			user: build(:user),
+			given_name: sequence(:user_personal_information_given_name,
+				&"Given name #{&1}"),
+			family_name: sequence(:user_personal_information_family_name,
+				&"Family name #{&1}"),
+			gender: "not_specified",
+			nationality: "TR",
+			birthday: nil
+		}
+	end
 end

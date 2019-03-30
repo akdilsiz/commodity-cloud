@@ -43,4 +43,12 @@ defmodule Commodity.Factory do
 			value: sequence(:user_email_value, &"email#{&1}@mail.com")
 		}
 	end
+
+	def user_email_log_factory do
+		%Commodity.Api.Iam.User.Email.Log{
+			user: build(:user),
+			email: build(:user_email),
+			source_user: build(:user)
+		}
+	end
 end

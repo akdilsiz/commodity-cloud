@@ -48,6 +48,10 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
       name: :user_emails_value_unique)
 
     create table(:user_email_logs) do
+      add :user_id, references(:users,
+        on_delete: :delete_all,
+        on_update: :update_all),
+        null: false
       add :email_id, references(:user_emails,
         on_delete: :delete_all,
         on_update: :update_all),
@@ -59,6 +63,7 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
       add :inserted_at, :naive_datetime_usec, default: fragment("now()")
     end
 
+    create index(:user_email_logs, [:user_id], using: :btree)
     create index(:user_email_logs, [:email_id], using: :btree)
     create index(:user_email_logs, [:source_user_id], using: :btree)
 

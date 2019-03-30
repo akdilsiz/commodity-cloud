@@ -77,10 +77,15 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
 															on_delete: :delete_all,
 															on_update: :update_all),
 															null: false
+      add :source_user_id, references(:users,
+        on_delete: :nilify_all,
+        on_update: :update_all),
+        null: true
 			add :inserted_at, :naive_datetime_usec, default: fragment("now()")
   	end
 
   	create index(:user_email_primaries, [:user_id], using: :btree)
+    create index(:user_email_primaries, [:source_user_id], using: :btree)
 
   	create table(:user_phone_numbers) do
   		add :user_id, references(:users,

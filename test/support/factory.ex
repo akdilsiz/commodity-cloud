@@ -51,4 +51,12 @@ defmodule Commodity.Factory do
 			source_user: build(:user)
 		}
 	end
+
+	def user_email_primary_factory do
+		%Commodity.Api.Iam.User.Email.Primary{
+			email: build(:user_email),
+			user: build(:user),
+			source_user: build(:user)
+		}
+	end
 end

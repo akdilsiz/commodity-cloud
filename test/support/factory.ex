@@ -26,6 +26,7 @@ defmodule Commodity.Factory do
 	def user_personal_information_factory do
 		%Commodity.Api.Iam.User.PersonalInformation{
 			user: build(:user),
+			source_user: build(:user),
 			given_name: sequence(:user_personal_information_given_name,
 				&"Given name #{&1}"),
 			family_name: sequence(:user_personal_information_family_name,
@@ -33,6 +34,12 @@ defmodule Commodity.Factory do
 			gender: "not_specified",
 			nationality: "TR",
 			birthday: nil
+		}
+	end
+
+	def user_email_factory do
+		%Commodity.Api.Iam.User.Email{
+			user: build(:user)
 		}
 	end
 end

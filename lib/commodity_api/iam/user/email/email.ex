@@ -28,6 +28,9 @@ defmodule Commodity.Api.Iam.User.Email do
 		field :value, :string
 
 		timestamps()
+
+		has_one :primary, Commodity.Api.Iam.User.Email.Primary,
+			foreign_key: :email_id
 	end
 
 	def changeset(struct, params \\ %{}) do

@@ -100,6 +100,26 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
   	create index(:user_phone_numbers, [:user_id], using: :btree)
     create unique_index(:user_phone_numbers, [:number], using: :btree)
 
+    create table(:user_phone_number_logs) do
+      add :user_id, references(:users,
+        on_delete: :delete_all,
+        on_update: :update_all),
+        null: false
+      add :number_id, references(:user_phone_numbers,
+        on_delete: :delete_all,
+        on_update: :update_all),
+        null: false
+      add :source_user_id, references(:users,
+        on_delete: :nilify_all,
+        on_update: :update_all),
+        null: true
+      add :inserted_at, :naive_datetime_usec, default: fragment("now()")
+    end
+
+    create index(:user_phone_number_logs, [:user_id], using: :btree)
+    create index(:user_phone_number_logs, [:number_id], using: :btree)
+    create index(:user_phone_number_logs, [:source_user_id], using: :btree)
+
   	create table(:user_phone_number_primaries, primary_key: false) do
   		add :phone_number_id, references(:user_phone_numbers,
   																		on_delete: :delete_all,

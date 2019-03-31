@@ -59,4 +59,12 @@ defmodule Commodity.Factory do
 			source_user: build(:user)
 		}
 	end
+
+	def user_phone_number_factory do
+		%Commodity.Api.Iam.User.PhoneNumber{
+			user: build(:user),
+			value: "905111111111",
+			type: "mobile"
+		}
+	end
 end

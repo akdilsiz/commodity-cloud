@@ -92,13 +92,14 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
   														on_delete: :delete_all,
   														on_update: :update_all),
   														null: false
-			add :number, :string, size: 24, null: false
+			add :value, :string, size: 24, null: false
 			add :type, :phone_number, default: "not_specified"
 			timestamps()
   	end
 
   	create index(:user_phone_numbers, [:user_id], using: :btree)
-    create unique_index(:user_phone_numbers, [:number], using: :btree)
+    create unique_index(:user_phone_numbers, [:value], using: :btree,
+      name: :user_phone_numbers_value_unique)
 
     create table(:user_phone_number_logs) do
       add :user_id, references(:users,

@@ -19,7 +19,7 @@ defmodule Commodity.Api.Iam.User.PhoneNumber.Log do
 	@derive {Jason.Encoder, only: [:id, :user_id, :number_id, :source_user_id,
 		:inserted_at]}
 
-	schema "user_email_logs" do
+	schema "user_phone_number_logs" do
 		belongs_to :user, Commodity.Api.Iam.User
 		belongs_to :number, Commodity.Api.Iam.User.PhoneNumber
 		belongs_to :source_user, Commodity.Api.Iam.User

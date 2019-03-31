@@ -67,4 +67,20 @@ defmodule Commodity.Factory do
 			type: "mobile"
 		}
 	end
+
+	def user_phone_number_log_factory do
+		%Commodity.Api.Iam.User.PhoneNumber.Log{
+			user: build(:user),
+			number: build(:user_phone_number),
+			source_user: build(:user)
+		}
+	end
+
+	def user_phone_number_primary_factory do
+		%Commodity.Api.Iam.User.PhoneNumber.Primary{
+			number: build(:user_phone_number),
+			user: build(:user),
+			source_user: build(:user)
+		}
+	end
 end

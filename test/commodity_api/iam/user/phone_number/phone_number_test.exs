@@ -58,7 +58,7 @@ defmodule Commodity.Api.Iam.PhoneNumberTest do
 			value: "905111111111")
 
 		changeset = PhoneNumber.changeset(%PhoneNumber{},
-			%{user_id: 1, value: "905111111111", type: "mobile"})
+			%{user_id: phone_number.user.id, value: "905111111111", type: "mobile"})
 
 		assert {:error, changeset} = Repo.insert(changeset)
 		refute changeset.valid?

@@ -6,6 +6,7 @@ Simple account management
  - [ ] Base modules(product, items, category vs.) will be written.
  - [ ] CI/CD and Docker tools integration.
  - [ ] E-commerce features will be added.
+ - [ ] Social media integrations.
  - [ ] Citusdb inegration.
  - [ ] Soon all to-do will be added :)
 

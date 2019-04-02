@@ -116,4 +116,24 @@ defmodule Commodity.Factory do
 			note: nil
 		}
 	end
+
+	def user_address_factory do
+		%Commodity.Api.Iam.User.Address{
+			user: build(:user),
+			type: "home",
+			name: sequence(:user_address_name, &"Address #{&1}"),
+			country: "Turkey",
+			city: "Istanbul",
+			state: "Atasehir",
+			zip_code: "34212",
+			address: "Address"
+		}
+	end
+
+	def user_address_invalidation_factory do
+		%Commodity.Api.Iam.User.Address.Invalidation{
+			address: build(:user_address),
+			source_user: build(:user)
+		}
+	end
 end

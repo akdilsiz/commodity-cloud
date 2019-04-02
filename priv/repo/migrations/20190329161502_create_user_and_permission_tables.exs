@@ -208,14 +208,14 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
         on_delete: :nilify_all,
         on_update: :update_all),
         null: true
-      add :state, :state, default: "active"
+      add :value, :state, default: "active"
       add :note, :string, null: true, size: 255
       add :inserted_at, :naive_datetime_usec, default: fragment("now()")
     end
 
     create index(:user_states, [:user_id], using: :btree)
     create index(:user_states, [:source_user_id], using: :btree)
-    create index(:user_states, [:state], using: :btree)
+    create index(:user_states, [:value], using: :btree)
 
     create table(:permissions) do
       add :controller_name, :string, size: 100, null: false

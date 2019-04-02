@@ -107,4 +107,13 @@ defmodule Commodity.Factory do
 			source_passphrase: build(:user_passphrase)
 		}
 	end
+
+	def user_state_factory do
+		%Commodity.Api.Iam.User.State{
+			user: build(:user),
+			source_user: build(:user),
+			value: "active",
+			note: nil
+		}
+	end
 end

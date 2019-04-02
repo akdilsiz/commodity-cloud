@@ -107,6 +107,11 @@ config :commodity, :elasticsearch,
     }
   }
 
+config :commodity, :redis_keys,
+  permission: %{cache: "user:permission",
+                cache_type: "user:permission:types"}
+
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

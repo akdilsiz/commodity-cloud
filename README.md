@@ -1,5 +1,5 @@
 # .commodity
-Simple account management
+Simple account management. For now :)
 
 ## TODO
  - [ ] Authentication/Authorization will be written.

@@ -158,6 +158,41 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
 
     create index(:user_addresses, [:user_id], using: :btree)
 
+    create table(:user_address_invalidations, primary_key: false) do
+      add :address_id, references(:user_addresses,
+        on_delete: :delete_all,
+        on_update: :update_all),
+        null: false,
+        primary_key: true
+      add :source_user_id, references(:users,
+        on_delete: :nilify_all,
+        on_update: :update_all),
+        null: true
+      add :inserted_at, :naive_datetime_usec, default: fragment("now()")
+    end
+
+    create index(:user_address_invalidations, [:source_user_id], using: :btree)
+
+    create table(:user_address_logs) do
+      add :user_id, references(:users,
+        on_delete: :delete_all,
+        on_update: :update_all),
+        null: false
+      add :address_id, references(:user_addresses,
+        on_delete: :delete_all,
+        on_update: :update_all),
+        null: false
+      add :source_user_id, references(:users,
+        on_delete: :nilify_all,
+        on_update: :update_all),
+        null: true
+      add :inserted_at, :naive_datetime_usec, default: fragment("now()")
+    end
+
+    create index(:user_address_logs, [:user_id], using: :btree)
+    create index(:user_address_logs, [:address_id], using: :btree)
+    create index(:user_address_logs, [:source_user_id], using: :btree)
+
   	create table(:user_password_assignments) do
       add :user_id, references(:users, 
                               on_delete: :delete_all, 

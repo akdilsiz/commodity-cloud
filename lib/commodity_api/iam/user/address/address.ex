@@ -47,5 +47,17 @@ defmodule Commodity.Api.Iam.User.Address do
 		|> validate_length(:city, max: 32)
 		|> validate_length(:address, max: 512)
 		|> foreign_key_constraint(:user_id)
+		|> to_capitalize(:city)
+		|> to_capitalize(:country)
+		|> to_capitalize(:state)
+		|> to_capitalize(:name)
+	end
+
+	defp to_capitalize(changeset, field) do
+		if cap_field = get_change(changeset, field) do
+			put_change(changeset, field, String.capitalize(cap_field))
+		else
+			changeset
+		end
 	end
 end

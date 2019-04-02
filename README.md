@@ -7,7 +7,8 @@ Simple account management
  - [ ] CI/CD and Docker tools integration.
  - [ ] E-commerce features will be added.
  - [ ] Social media integrations.
- - [ ] Citusdb inegration.
+ - [ ] Citusdb integration.
+ - [ ] Analytics system integration
  - [ ] Soon all to-do will be added :)
 
 ## Completed modules

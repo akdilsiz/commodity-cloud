@@ -178,15 +178,18 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
     end
 
     create index(:user_passphrases, [:user_id], using: :btree)
-    create unique_index(:user_passphrases, [:passphrase], using: :btree)
+    create unique_index(:user_passphrases, [:passphrase],
+      name: :user_passphrases_passphrase_unique,
+      using: :btree)
     create index(:user_passphrases, [:inserted_at], using: :btree)
 
-    create table(:user_passphrase_invalidations) do
-      add :source_passphrase_id, references(:user_passphrases, 
+    create table(:user_passphrase_invalidations, primary_key: false) do
+      add :target_passphrase_id, references(:user_passphrases, 
                                           on_delete: :delete_all, 
                                           on_update: :update_all),
-                                          null: false
-      add :target_passphrase_id, references(:user_passphrases, 
+                                          null: false,
+                                          primary_key: true
+      add :source_passphrase_id, references(:user_passphrases, 
                                           on_delete: :delete_all, 
                                           on_update: :update_all),
                                           null: false
@@ -195,8 +198,6 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
 
     create index(:user_passphrase_invalidations, 
     						[:source_passphrase_id], using: :btree)
-    create unique_index(:user_passphrase_invalidations, 
-    										[:target_passphrase_id], using: :btree)
 
     create table(:user_states) do
       add :user_id, references(:users,

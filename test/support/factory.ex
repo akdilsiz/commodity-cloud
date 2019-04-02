@@ -20,6 +20,7 @@ defmodule Commodity.Factory do
 	use ExMachina.Ecto, repo: Commodity.Repo
 
 	import Comeonin.Bcrypt, only: [hashpwsalt: 1]
+	alias Commodity.Api.Iam.Generic.Passkey
 
 	def user_factory do
 		%Commodity.Api.Iam.User{}
@@ -90,6 +91,20 @@ defmodule Commodity.Factory do
 		%Commodity.Api.Iam.User.PasswordAssignment{
 			user: build(:user),
 			password_digest: hashpwsalt("12345678")
+		}
+	end
+
+	def user_passphrase_factory do
+		%Commodity.Api.Iam.User.Passphrase{
+			user: build(:user),
+			passphrase: Passkey.generate()
+		}
+	end
+
+	def user_passphrase_invalidation_factory do
+		%Commodity.Api.Iam.User.Passphrase.Invalidation{
+			target_passphrase: build(:user_passphrase),
+			source_passphrase: build(:user_passphrase)
 		}
 	end
 end

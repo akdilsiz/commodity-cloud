@@ -19,23 +19,23 @@ defmodule Commodity.RequestTest do
 	import Commodity.Request
 
 	test "get request success with requ options" do
-		assert {:ok, _status, _body} = get("https://bisigortaci.com", [], [])
+		assert {:ok, _status, _body} = get("https://tecpor.com", [], [])
 	end
 
 	test "get request success" do
-		assert {:ok, _status, _body} = get("https://bisigortaci.com", [])
+		assert {:ok, _status, _body} = get("https://tecpor.com", [])
 	end
 
 	test "post request" do
-		assert {:ok, _status, _body} = post("http://bisigortaci.com", [], [])
+		assert {:ok, _status, _body} = post("http://tecpor.com", [], [])
 	end
 
 	test "put request" do
-		assert {:ok, _status, _body} = put("http://bisigortaci.com", [], [])
+		assert {:ok, _status, _body} = put("http://tecpor.com", [], [])
 	end
 
 	test "delete request" do
-		assert {:ok, _status, _body} = delete("http://bisigortaci.com", [], [])
+		assert {:ok, _status, _body} = delete("http://tecpor.com", [], [])
 	end
 
 	test "throws error get request invalid url" do

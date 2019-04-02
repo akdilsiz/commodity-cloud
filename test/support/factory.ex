@@ -19,6 +19,8 @@ defmodule Commodity.Factory do
 	"""
 	use ExMachina.Ecto, repo: Commodity.Repo
 
+	import Comeonin.Bcrypt, only: [hashpwsalt: 1]
+
 	def user_factory do
 		%Commodity.Api.Iam.User{}
 	end
@@ -81,6 +83,13 @@ defmodule Commodity.Factory do
 			number: build(:user_phone_number),
 			user: build(:user),
 			source_user: build(:user)
+		}
+	end
+
+	def user_password_assignment_factory do
+		%Commodity.Api.Iam.User.PasswordAssignment{
+			user: build(:user),
+			password_digest: hashpwsalt("12345678")
 		}
 	end
 end

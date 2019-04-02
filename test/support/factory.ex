@@ -136,4 +136,36 @@ defmodule Commodity.Factory do
 			source_user: build(:user)
 		}
 	end
+
+	def permission_factory do
+		%Commodity.Api.Iam.AccessControl.Permission{
+			controller_name: sequence(:permission_controller_name,
+				&"Elixir.Commodity.#{&1}Controller"),
+			controller_action: "index",
+			type: "all"
+		}
+	end
+
+	def permission_set_factory do
+		%Commodity.Api.Iam.AccessControl.PermissionSet{
+			user: build(:user),
+			name: sequence(:permission_set_name, &"Permission #{&1}"),
+			description: sequence(:permission_set_description, &"P. Desc #{&1}")
+		}
+	end
+
+	def permission_set_permission_factory do
+		%Commodity.Api.Iam.AccessControl.PermissionSetPermission{
+			permission_set: build(:permission_set),
+			permission: build(:permission)
+		}
+	end
+
+	def permission_set_grant_factory do
+		%Commodity.Api.Iam.AccessControl.PermissionSetGrant{
+			permission_set: build(:permission_set),
+			user: build(:user),
+			target_user: build(:user)
+		}
+	end
 end

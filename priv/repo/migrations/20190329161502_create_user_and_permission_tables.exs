@@ -259,10 +259,11 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
     end
 
     create unique_index(:permissions,
-                        [:controller_name,
-                        :controller_action,
-                        :type],
-                        using: :btree)
+      [:controller_name,
+      :controller_action,
+      :type],
+      name: :permissions_all_unique,
+      using: :btree)
 
     create table(:permission_sets) do
       add :name, :string, size: 50, null: false
@@ -272,7 +273,8 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
       add :inserted_at, :naive_datetime_usec, default: fragment("now()")
     end
 
-    create unique_index(:permission_sets, [:name], using: :btree)
+    create unique_index(:permission_sets, [:name], 
+      name: :permission_sets_name_unique, using: :btree)
     create index(:permission_sets, [:user_id], using: :btree)
 
     create table(:permission_set_permissions) do
@@ -285,7 +287,9 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
     end
 
     create unique_index(:permission_set_permissions,
-                        [:permission_set_id, :permission_id])
+      [:permission_set_id, :permission_id],
+      name: :permission_set_permissions_ps_p_unique,
+      using: :btree)
 
     create table(:permission_set_grants) do
       add :permission_set_id,

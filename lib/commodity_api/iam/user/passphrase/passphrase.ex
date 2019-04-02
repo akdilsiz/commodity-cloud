@@ -16,6 +16,8 @@
 defmodule Commodity.Api.Iam.User.Passphrase do
 	use Commodity.Api, :model
 
+	@derive {Jason.Encoder, only: [:id, :user_id, :passphrase, :inserted_at]}
+
 	schema "user_passphrases" do
 		belongs_to :user, Commodity.Api.Iam.User
 

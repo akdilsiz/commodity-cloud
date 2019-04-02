@@ -16,6 +16,9 @@
 defmodule Commodity.Api.Iam.User.State do
 	use Commodity.Api, :model
 
+	@derive {Jason.Encoder, only: [:id, :user_id, :source_user_id, :value,
+		:note, :inserted_at]}
+
 	schema "user_states" do
 		belongs_to :user, Commodity.Api.Iam.User
 		belongs_to :source_user, Commodity.Api.Iam.User

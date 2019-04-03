@@ -13,21 +13,17 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.AccessControl.Passphrase.InvalidationView do
+	use Commodity.Api, :view
 
-	@timestamps_opts [type: :naive_datetime_usec]
-
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
-
-		timestamps()
+	def render("show.json", %{invalidation: invalidation}) do
+		%{data: render_one(invalidation.one, __MODULE__, "invalidation.json"),
+		time_information: render_one(invalidation.time_information,
+			Commodity.Api.Util.TimeInformationView,
+			"time_information.json")}
 	end
 
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+	def render("invalidation.json", %{invalidation: invalidation}) do
+		%{passphrase_ids: invalidation.passphrase_ids}
 	end
 end

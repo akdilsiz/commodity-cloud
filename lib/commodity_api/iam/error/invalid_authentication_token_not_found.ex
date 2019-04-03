@@ -13,21 +13,10 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
-
-	@timestamps_opts [type: :naive_datetime_usec]
-
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
-
-		timestamps()
-	end
-
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
-	end
+defmodule Commodity.Api.Iam.Error.InvalidAuthenticationTokenNotFound do
+	@moduledoc """
+	Authentication token not found error
+	"""
+	defexception [plug_status: 403,
+							message: "The request sent did not consist a valid token entry."]
 end

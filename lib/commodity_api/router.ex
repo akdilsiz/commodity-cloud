@@ -23,7 +23,61 @@ defmodule Commodity.Router do
     plug Commodity.Api.Generic.Plug.PublicIp
   end
 
-  scope "/", Commodity do
+  scope "/", Commodity.Api do
     pipe_through :api
+
+    scope "/user", as: "iam" do
+      options "/sign_in",
+              Iam.AccessControl.PassphraseController,
+              :options
+      resources "/sign_in",
+                Iam.AccessControl.PassphraseController,
+                only: [:create],
+                assigns: %{name: "user/sign_in"}
+
+      options "/sign_in/token",
+              Iam.AccessControl.TokenController,
+              :options
+      resources "/sign_in/token",
+                Iam.AccessControl.TokenController,
+                only: [:create],
+                assigns: %{name: "user/sign_in/token"}
+
+      options "/confirmation",
+              Iam.AccessControl.ConfirmationController,
+              :options
+      resources "/confirmation",
+                Iam.AccessControl.ConfirmationController,
+                only: [:show],
+                signleton: true,
+                assigns: %{name: "user/confirmation"}
+
+      scope "/new", as: "new" do
+        options "/",
+              Iam.AccessControl.UserController,
+              :options
+        resources "/",
+                  Iam.AccessControl.UserController,
+                  only: [:create],
+                  assigns: %{name: "user/new"}
+      end
+
+      options "/",
+            Iam.UserController,
+            :options
+      resources "/", 
+                Iam.UserController,
+                only: [:index, :show, :create, :delete],
+                assigns: %{name: "user"} do
+
+                options "/sign_out",
+                        Iam.AccessControl.Passphrase.InvalidationController,
+                        :options
+                resources "/sign_out",
+                        Iam.AccessControl.Passphrase.InvalidationController,
+                        only: [:create],
+                        assigns: %{name: "user/sign_out"}
+      end
+    end
   end
 end

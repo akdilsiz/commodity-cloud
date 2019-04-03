@@ -13,21 +13,20 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.AccessControl.PassphraseView do
+	use Commodity.Api, :view
 
-	@timestamps_opts [type: :naive_datetime_usec]
-
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
-
-		timestamps()
+	def render("show.json", %{passphrase: passphrase}) do
+		%{data: render_one(passphrase.one, __MODULE__, "passphrase.json"),
+		time_information: render_one(passphrase.time_information,
+			Commodity.Api.Util.TimeInformationView,
+			"time_information.json")}
 	end
 
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+	def render("passphrase.json", %{passphrase: passphrase}) do
+		%{id: passphrase.id,
+			user_id: passphrase.user_id,
+			passphrase: passphrase.passphrase,
+			inserted_at: NaiveDateTime.to_iso8601(passphrase.inserted_at)}
 	end
 end

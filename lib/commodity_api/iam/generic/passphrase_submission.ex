@@ -13,21 +13,19 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.Generic.PassphraseSubmission do
+	@moduledoc """
+	Authentcation provides users for create JWT reqired submission
+	"""
+	use Commodity.Api, :virtual
 
-	@timestamps_opts [type: :naive_datetime_usec]
-
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
-
-		timestamps()
+	embedded_schema do
+		field :passphrase, :string
 	end
 
 	def changeset(struct, params \\ %{}) do
 		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+		|> cast(params, [:passphrase])
+		|> validate_required([:passphrase])
 	end
 end

@@ -13,21 +13,24 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.Generic.Credentials do
+	@moduledoc """
+	Authentication provides users for create access token required
+  credentials
+	"""
+	use Commodity.Api, :virtual
+	@email_regex ~r/\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
 
-	@timestamps_opts [type: :naive_datetime_usec]
-
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
-
-		timestamps()
+	@primary_key false
+	embedded_schema do
+		field :email, :string
+		field :password, :string
 	end
 
 	def changeset(struct, params \\ %{}) do
 		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+		|> cast(params, [:email, :password])
+		|> validate_required([:email, :password])
+		|> validate_format(:email, @email_regex)
 	end
 end

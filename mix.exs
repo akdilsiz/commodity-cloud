@@ -102,6 +102,8 @@ defmodule Commodity.MixProject do
     [
       "ecto.setup": ["ecto.create", "ecto.migrate", 
                     "commodity.clean.thirdparty.db",
+                    "commodity.authentication.generate",
+                    "commodity.base.artifacts.generate",
                     "commodity.module_generate",
                     "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],

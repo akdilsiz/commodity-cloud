@@ -44,6 +44,9 @@ defmodule Commodity.Api do
       import Ecto.Repo
       import Ecto.Query
 
+      import Commodity.Api.Iam.Generic.AuthenticationPlug
+      import Commodity.Api.Iam.Generic.AuthorizationPlug
+
       import Commodity.Api.Util.VirtualValidation
 
       import Commodity.Api.Util.Type.String
@@ -53,6 +56,8 @@ defmodule Commodity.Api do
       alias Commodity.Api.Util.ChangesetView
 
       alias Commodity.Api.Util.Type.Integer, as: CInteger
+
+      @redis_keys Application.get_env(:commodity, :redis_keys)
     end
   end
 
@@ -97,6 +102,8 @@ defmodule Commodity.Api do
     quote do
       use Phoenix.Channel
       import Commodity.Gettext
+
+      @redis_keys Application.get_env(:commodity, :redis_keys)
     end
   end
 
@@ -139,6 +146,8 @@ defmodule Commodity.Api do
       import Plug.Conn
       import Ecto.Query
       alias Commodity.Repo
+
+      @redis_keys Application.get_env(:commodity, :redis_keys)
     end
   end
 
@@ -167,6 +176,8 @@ defmodule Commodity.Api do
       alias Commodity.Api.Util.Type.Integer, as: CInteger
 
       require Logger
+
+      @redis_keys Application.get_env(:commodity, :redis_keys)
     end
   end
 
@@ -178,7 +189,9 @@ defmodule Commodity.Api do
 
       import Commodity.Api.Util.Type.String,
       import Commodity.Api.Util.Type.DateTime
-      alias Commodity.Api.Util.Type.Integer, as: CInteger      
+      alias Commodity.Api.Util.Type.Integer, as: CInteger
+
+      @redis_keys Application.get_env(:commodity, :redis_keys) 
     end
   end
 

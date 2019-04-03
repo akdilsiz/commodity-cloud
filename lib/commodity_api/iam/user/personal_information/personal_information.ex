@@ -17,7 +17,7 @@ defmodule Commodity.Api.Iam.User.PersonalInformation do
 	use Commodity.Api, :model
 
 	@derive {Jason.Encoder, only: [:id, :user_id, :source_user_id, :given_name, 
-		:family_name, :gender, :nationality, :birthday, :isnerted_at]}
+		:family_name, :gender, :nationality, :birthday, :inserted_at]}
 
 	schema "user_personal_informations" do
 		belongs_to :user, Commodity.Api.Iam.User

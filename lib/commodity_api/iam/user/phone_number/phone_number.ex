@@ -16,7 +16,7 @@
 defmodule Commodity.Api.Iam.User.PhoneNumber do
 	use Commodity.Api, :model
 
-	@derive {Jason.Encoder, only: [:id, :user_id, :number, :type,
+	@derive {Jason.Encoder, only: [:id, :user_id, :value, :type,
 		:inserted_at, :updated_at]}
 	@phone_number_regex ~r/\w{0,3}\w{3,3}\w{3,3}\w{4}/i
 	@timestamps_opts [type: :naive_datetime_usec]

@@ -13,21 +13,20 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.Generic.PasswordAuthenticationTest do
+	use Commodity.ConnCase
 
-	@timestamps_opts [type: :naive_datetime_usec]
+	alias Commodity.Api.Iam.Generic.PasswordAuthentication
+	alias Commodity.Factory
 
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
+	test "generate jwt conn with given parameters" do
+		user = Factory.insert(:user)
+		passphrase = Factory.insert(:user_passphrase, user: user)
 
-		timestamps()
-	end
+		conn = Phoenix.ConnTest.build_conn()
 
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+		conn = PasswordAuthentication.issue_token(conn, user, passphrase)
+
+		assert !is_nil(conn.assigns.jwt)
 	end
 end

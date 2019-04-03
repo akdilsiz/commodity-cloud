@@ -13,21 +13,24 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.Generic.PassphraseSubmissionTest do
+	use Commodity.DataCase
 
-	@timestamps_opts [type: :naive_datetime_usec]
+	alias Commodity.Api.Iam.Generic.PassphraseSubmission
+	alias Commodity.Api.Iam.Generic.Passkey
 
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
 
-		timestamps()
+	test "changeset with valid params" do
+		changeset = PassphraseSubmission.changeset(%PassphraseSubmission{},
+			%{passphrase: Passkey.generate()})
+
+		assert changeset.valid?
 	end
 
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+	test "changest with invalid params" do
+		changeset = PassphraseSubmission.changeset(%PassphraseSubmission{},
+			%{passphrase: false})
+
+		refute changeset.valid?
 	end
 end

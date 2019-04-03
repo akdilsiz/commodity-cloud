@@ -30,6 +30,8 @@ config :commodity, Commodity.Repo, migration_timestamps: [type: :naive_datetime_
 config :geo_postgis,
   json_library: Jason
 
+config :postgrex, :json_library, Jason  
+
 # Configures the endpoint
 config :commodity, Commodity.Endpoint,
   url: [host: "localhost"],
@@ -105,7 +107,34 @@ config :commodity, :elasticsearch,
         }
       }
     }
+  },
+  mappings: %{
+    user: %{
+        properties: %{
+          location: %{
+            type: "geo_point"
+          }
+        }
+    }
   }
+
+config :commodity, :redis_keys,
+  permission: %{cache: "user:permission",
+                cache_type: "user:permission:types"},
+  user: %{all: "users",
+          one: "user",
+          personal_information: %{one: "user:personal_information"},
+          email: %{all: "user:emails",
+                  one: "user:email",
+                  primary: "user:email:primary"},
+          phone_number: %{all: "user:phones",
+                          one: "user:phone",
+                          primary: "user:phone:primary"},
+          passphrase: %{one: "passphrase"},
+          address: %{all: "user:addresses",
+                    one: "user:address",
+                    primary: "user:address:primary"},
+          state: "user:state"}
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

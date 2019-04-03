@@ -44,6 +44,9 @@ defmodule Commodity.Api do
       import Ecto.Repo
       import Ecto.Query
 
+      import Commodity.Api.Iam.Generic.AuthenticationPlug
+      import Commodity.Api.Iam.Generic.AuthorizationPlug
+
       import Commodity.Api.Util.VirtualValidation
 
       import Commodity.Api.Util.Type.String

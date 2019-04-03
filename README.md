@@ -2,7 +2,7 @@
 Simple account management. For now :)
 
 ## TODO
- - [ ] Authentication/Authorization will be written.
+ - [x] Authentication/Authorization will be written.
  - [ ] Base modules(product, items, category vs.) will be written.
  - [ ] CI/CD and Docker tools integration.
  - [ ] E-commerce features will be added.
@@ -13,6 +13,12 @@ Simple account management. For now :)
 
 ## Completed modules
 To-do completed in this section will be added.
+
+## Requirements
+ - Elixir +1.6
+ - Postgresql
+ - Redis
+ - Elasticsearch +6
 
 ## Contributions
 All contributions are welcomed as long as you follow the conventions of Elixir language.

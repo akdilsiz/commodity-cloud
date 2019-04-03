@@ -13,21 +13,28 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.AccessControl.Passphrase.InvalidationBodyTest do
+	use Commodity.DataCase
 
-	@timestamps_opts [type: :naive_datetime_usec]
+	alias Commodity.Api.Iam.AccessControl.Passphrase.InvalidationBody
 
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
+	test "changeset with valid params" do
+		changeset = InvalidationBody.changeset(%InvalidationBody{},
+			%{passphrase_ids: [1, 2, 3]})
 
-		timestamps()
+		assert changeset.valid?
 	end
 
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+	test "changeset with invalid params" do
+		changeset = InvalidationBody.changeset(%InvalidationBody{},
+			%{passphrase_ids: 1})
+
+		refute changeset.valid?
+	end
+
+	test "changeset without passphrase_ids param" do
+		changeset = InvalidationBody.changeset(%InvalidationBody{}, %{})
+
+		refute changeset.valid?
 	end
 end

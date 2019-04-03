@@ -12,22 +12,28 @@
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
-## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+##   
+defmodule Commodity.Api.Generic.BaseArtifactsGenerate do
+	@moduledoc false
+	
+	alias Commodity.Elastic
 
-	@timestamps_opts [type: :naive_datetime_usec]
+	#@redis_keys Application.get_env(:commodity, :redis_keys)
+	@elasticsearch Application.get_env(:commodity, :elasticsearch)
 
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
-
-		timestamps()
+	def clean_and_generate(repo) do
+		clean(repo)
+		generate(repo)
 	end
 
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+	defp clean(_repo) do
+		{:ok, _} = Elastic.delete("/user")
+	end
+
+	defp generate(_repo) do
+		{:ok, _} = Elastic.put("/user", @elasticsearch[:settings], :put)
+
+		{:ok, _} = Elastic.put("/user/_mapping/_doc", 
+			@elasticsearch[:mappings].user, :put)
 	end
 end

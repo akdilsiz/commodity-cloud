@@ -13,21 +13,19 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.AccessControl.Passphrase.InvalidationBody do
+	@moduledoc """
+	Invalidation request body
+	"""
+	use Commodity.Api, :virtual
 
-	@timestamps_opts [type: :naive_datetime_usec]
-
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
-
-		timestamps()
+	embedded_schema do
+		field :passphrase_ids, {:array, :integer}
 	end
 
 	def changeset(struct, params \\ %{}) do
 		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+		|> cast(params, [:passphrase_ids])
+		|> validate_required([:passphrase_ids])
 	end
 end

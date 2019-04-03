@@ -13,21 +13,23 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.AccessControl.Passphrase.InvalidationPolicy do
+	use Commodity.Api, :policy
 
-	@timestamps_opts [type: :naive_datetime_usec]
+	alias Commodity.Api.Iam.User
 
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
+	def options(_conn, _params, _type), do: true
 
-		timestamps()
+	def create(conn, params, :self) do
+		policy_query(conn, params["user_id"])
 	end
 
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+	defp policy_query(conn, user_id) do
+		case Repo.get(User, user_id) do
+			nil ->
+				true
+			user ->
+				user.id == conn.assigns[:user_id]
+		end
 	end
 end

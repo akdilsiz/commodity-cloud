@@ -13,21 +13,21 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Module do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.User.StateView do
+	use Commodity.Api, :view
 
-	@timestamps_opts [type: :naive_datetime_usec]
-
-	schema "modules" do
-		field :name, :string
-		field :controller, :string
-
-		timestamps()
+	def render("show.json", %{state: state}) do
+		%{data: render_one(state.one, __MODULE__, "state.json"),
+		time_information: render_one(state.time_information,
+			TimeInformationView,
+			"time_information.json")}
 	end
 
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [:name, :controller])
-		|> validate_required([:name, :controller])
+	def render("state.json", %{state: state}) do
+		%{id: state.id,
+		user_id: state.user_id,
+		state: state.state,
+		note: state.note,
+		inserted_at: to_datetime(state.inserted_at)}
 	end
 end

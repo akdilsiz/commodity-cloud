@@ -13,19 +13,72 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ##   
-defmodule Commodity.ErrorView do
+defmodule Commodity.Api.Util.ErrorView do
   use Commodity.Api, :view
 
-  # If you want to customize a particular status code
-  # for a certain format, you may uncomment below.
-  # def render("500.html", _assigns) do
-  #   "Internal Server Error"
-  # end
+  def render("401.json", _assigns) do
+    %{errors: %{name: "Unauthorized", detail: "Authorization is refused due" <>
+      " to insufficient privileges."}}
+  end
 
-  # By default, Phoenix returns the status message from
-  # the template name. For example, "404.html" becomes
-  # "Not Found".
-  def template_not_found(template, _assigns) do
-    Phoenix.Controller.status_message_from_template(template)
+  def render("403.json", assigns) do
+    errors =
+      if Enum.count(assigns.reason |> Map.from_struct) > 2 do
+        fields = assigns.reason |> Map.from_struct
+        keys =
+          fields |> Map.keys |> Enum.drop(3)
+
+        extra_fields =
+          Enum.map(keys, fn x ->
+            {x, fields[x]}
+          end)
+          |> Map.new
+
+        %{name: "Restricted area", detail: assigns.reason.message}
+        |> Map.merge(extra_fields)
+      else
+        %{name: "Restricted area", detail: assigns.reason.message}
+      end
+
+    %{errors: errors}
+  end
+
+  def render("400.json", assigns) do
+    case Map.get(assigns, :reason) do
+      :changeset ->
+        render Commodity.Api.Util.BadRequestView, "error.json", 
+          fields: assigns.reason.changeset
+      _ ->
+        %{errors: %{name: "Bad request", detail: assigns.reason.message}}
+    end
+  end
+
+  def render("404.json", _assigns) do
+    %{errors: %{name: "Not Found", detail: "We could not find any data on" <>
+      " the given parameter."}}
+  end
+
+  def render("422.json", assigns) do
+    render Commodity.Api.Util.ChangesetView, "error.json", 
+      changeset: assigns.reason.changeset
+  end
+
+  def render("413.json", assigns) do
+    %{errors: %{name: "Quota Error", detail: assigns.reason.message}}
+  end
+
+  def render("415.json", assigns) do
+    %{errors: %{name: "Unsupported media", detail: assigns.reason.message}}
+  end
+
+  def render("500.json", _assigns) do
+    %{errors: %{name: "Internal Server Error", detail: "Somethings went" <>
+      " wrong in the server, please contact with administrator."}}
+  end
+
+  # In case no render clause matches or no
+  # template is found, let's render it as 500
+  def template_not_found(_template, assigns) do
+    render "500.json", assigns
   end
 end

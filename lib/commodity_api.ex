@@ -57,6 +57,8 @@ defmodule Commodity.Api do
 
       alias Commodity.Api.Util.Type.Integer, as: CInteger
 
+      alias Commodity.Elastic
+
       @redis_keys Application.get_env(:commodity, :redis_keys)
     end
   end
@@ -175,6 +177,8 @@ defmodule Commodity.Api do
       import Commodity.Api.Util.Type.DateTime
       alias Commodity.Api.Util.Type.Integer, as: CInteger
 
+      alias Commodity.Elastic
+
       require Logger
 
       @redis_keys Application.get_env(:commodity, :redis_keys)
@@ -190,6 +194,8 @@ defmodule Commodity.Api do
       import Commodity.Api.Util.Type.String,
       import Commodity.Api.Util.Type.DateTime
       alias Commodity.Api.Util.Type.Integer, as: CInteger
+
+      alias Commodity.Elastic
 
       @redis_keys Application.get_env(:commodity, :redis_keys) 
     end

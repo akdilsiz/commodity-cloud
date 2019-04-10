@@ -65,6 +65,9 @@ defmodule Commodity.Router do
       options "/",
             Iam.UserController,
             :options
+      options "/:anything",
+            Iam.UserController,
+            :options
       resources "/", 
                 Iam.UserController,
                 only: [:index, :show, :create, :delete],

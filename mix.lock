@@ -62,7 +62,7 @@
   "ranch": {:hex, :ranch, "1.6.2", "6db93c78f411ee033dbb18ba8234c5574883acb9a75af0fb90a9b82ea46afa00", [:rebar3], [], "hexpm"},
   "ranch_proxy_protocol": {:hex, :ranch_proxy_protocol, "2.1.1", "3c4723327166d2d63c0405f4914e2e471c6de362cc844e9b203af5763e7c9d25", [:rebar3], [{:ranch, "1.6.2", [hex: :ranch, repo: "hexpm", optional: false]}], "hexpm"},
   "recon": {:hex, :recon, "2.3.6", "2bcad0cf621fb277cabbb6413159cd3aa30265c2dee42c968697988b30108604", [:rebar3], [], "hexpm"},
-  "rediscl": {:hex, :rediscl, "0.2.2", "1a30bf925d550cb0c439581650ab5590605756b0d6b34a08349113d127aa5150", [:mix], [{:eredis, "~> 1.2", [hex: :eredis, repo: "hexpm", optional: false]}, {:jason, "~> 1.1", [hex: :jason, repo: "hexpm", optional: false]}, {:poolboy, "~> 1.5", [hex: :poolboy, repo: "hexpm", optional: false]}], "hexpm"},
+  "rediscl": {:hex, :rediscl, "0.2.3", "e7efa54f41f4010064c7db2582b815dc91b3fcf688af4ef85cb121a072f5cf17", [:mix], [{:eredis, "~> 1.2", [hex: :eredis, repo: "hexpm", optional: false]}, {:jason, "~> 1.1", [hex: :jason, repo: "hexpm", optional: false]}, {:poolboy, "~> 1.5", [hex: :poolboy, repo: "hexpm", optional: false]}], "hexpm"},
   "slugger": {:hex, :slugger, "0.3.0", "efc667ab99eee19a48913ccf3d038b1fb9f165fa4fbf093be898b8099e61b6ed", [:mix], [], "hexpm"},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.4", "f0eafff810d2041e93f915ef59899c923f4568f4585904d010387ed74988e77b", [:make, :mix, :rebar3], [], "hexpm"},
   "sweet_xml": {:hex, :sweet_xml, "0.6.6", "fc3e91ec5dd7c787b6195757fbcf0abc670cee1e4172687b45183032221b66b8", [:mix], [], "hexpm"},

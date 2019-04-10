@@ -42,7 +42,21 @@ defmodule Commodity.Api.Iam.Generic.AuthorizationPlug do
 					":#{controller_name}:#{controller_action}:" <>
 					available_types_s <>
 					":#{conn.assigns[:user_id]}") do
-					{:ok, :undefined} ->
+					{:ok, cached_permissions} ->
+						cached_permissions =
+							Jason.decode!(cached_permissions, [{:keys, :atoms!}])
+
+						permission_id = cached_permissions.permission_id
+						permission_type = cached_permissions.permission_type
+						permission_set_permission_id =
+							cached_permissions.permission_set_permission_id
+
+						if permission_type in available_types do
+							{permission_id, permission_type, permission_set_permission_id}
+						else
+							{nil, nil, nil}
+						end
+					{:error, :undefined} ->
 						query = from psg in PermissionSetGrant,
 										left_join: psg2 in PermissionSetGrant,
 											on: psg.target_user_id == psg2.target_user_id and
@@ -76,20 +90,6 @@ defmodule Commodity.Api.Iam.Generic.AuthorizationPlug do
 
 									{permission_id, permission_type, permission_set_permission_id}
 							end
-					{:ok, cached_permissions} ->
-						cached_permissions =
-							Jason.decode!(cached_permissions, [{:keys, :atoms!}])
-
-						permission_id = cached_permissions.permission_id
-						permission_type = cached_permissions.permission_type
-						permission_set_permission_id =
-							cached_permissions.permission_set_permission_id
-
-						if permission_type in available_types do
-							{permission_id, permission_type, permission_set_permission_id}
-						else
-							{nil, nil, nil}
-						end
 				end
 
 			if is_nil(permission_id) and is_nil(permission_type) and

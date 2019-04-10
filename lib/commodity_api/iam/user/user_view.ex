@@ -45,14 +45,14 @@ defmodule Commodity.Api.Iam.UserView do
 				Commodity.Api.Iam.User.EmailView,
 				"email.json")
 		else
-			nil
+			[]
 		end,
 		phone_numbers: if !is_nil(Map.get(user, :phone_numbers, nil)) do
 			render_many(user.phone_numbers,
 				Commodity.Api.Iam.User.PhoneNumberView,
 				"phone_number.json")
 		else
-			nil
+			[]
 		end,
 		inserted_at: to_datetime(user.inserted_at)}
 	end

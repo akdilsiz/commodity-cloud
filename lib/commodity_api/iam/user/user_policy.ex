@@ -19,7 +19,7 @@ defmodule Commodity.Api.Iam.UserPolicy do
 	def index(_conn, _params, _type), do: false
 
 	def show(conn, params, :self) do
-		if conn.assigns[:user_id] == params["id"] do
+		if conn.assigns[:user_id] == String.to_integer(params["id"]) do
 			true
 		else
 			false

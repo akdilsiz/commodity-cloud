@@ -16,6 +16,8 @@
 defmodule Commodity.Api.Iam.User do
 	use Commodity.Api, :model
 
+	@derive {Jason.Encoder, only: [:id, :inserted_at]}
+
 	schema "users" do
 		field :inserted_at, :naive_datetime_usec, read_after_writes: true
 	end

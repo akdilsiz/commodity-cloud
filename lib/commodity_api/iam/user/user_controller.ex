@@ -35,6 +35,15 @@ defmodule Commodity.Api.Iam.UserController do
 		limit = get_field(params, :limit)
 		offset = get_field(params, :offset)
 		state = get_field(params, :state)
+		order_by = get_field(params, :order_by)
+
+		order =
+			case order_by do
+				"desc" ->
+					[desc: :id]
+				"asc" ->
+					[asc: :id]
+			end
 
 		total_count = Repo.aggregate(User, :count, :id)
 
@@ -48,6 +57,7 @@ defmodule Commodity.Api.Iam.UserController do
 										us.value == ^state,
 						limit: ^limit,
 						offset: ^offset,
+						order_by: ^order,
 						select: u
 
 		users = Repo.all(query)
@@ -79,10 +89,21 @@ defmodule Commodity.Api.Iam.UserController do
 	end
 
 	def show(conn, %{"id" => id}) do
-		user = Repo.get!(User, id)
+		user =
+			case Rediscl.Query.get("#{@redis_keys[:user].one}:#{id}") do
+				{:ok, user} ->
+					Jason.decode!(user, [{:keys, :atoms!}])
+				_ ->
+					user = Repo.get!(User, id)
+
+					Rediscl.Query.set("#{@redis_keys[:user].one}:#{user.id}",
+						Jason.encode!(user))
+
+					user
+			end
 
 		render conn,
-			"index.json",
+			"show.json",
 			user: %{one: user,
 				time_information: conn.assigns[:time_information]}
 	end
@@ -90,17 +111,28 @@ defmodule Commodity.Api.Iam.UserController do
 	def create(conn, %{"user" => user_params}) do
 		changeset = User.changeset(%User{}, user_params)
 
-		case Repo.insert(changeset) do
+		transaction = Repo.transaction(fn -> 
+			user = Repo.insert!(changeset)
+
+			{_, _} = Rediscl.Query.set("#{@redis_keys[:user].one}:#{user.id}",
+				Jason.encode!(user))
+
+			{_, _} = Elastic.put("/user/_doc/#{user.id}", user)
+
+			user
+		end)
+
+		case transaction do
 			{:ok, user} ->
 				conn
 				|> put_status(:created)
 				|> render("show.json", user: %{one: user,
 					time_information: conn.assigns[:time_information]})
-			{:error, changeset} ->
-				conn
-				|> put_status(:unprocessable_entity)
-				|> put_view(ChangesetView)
-				|> render("error.json", changeset: changeset)
+			# {:error, changeset} ->
+			# 	conn
+			# 	|> put_status(:unprocessable_entity)
+			# 	|> put_view(ChangesetView)
+			# 	|> render("error.json", changeset: changeset)
 		end
 	end
 
@@ -108,6 +140,9 @@ defmodule Commodity.Api.Iam.UserController do
 		user = Repo.get!(User, id)
 
 		Repo.delete!(user)
+
+		{:ok, _} = Rediscl.Query.del("#{@redis_keys[:user].one}:#{user.id}")
+		{:ok, _} = Elastic.delete("/user/_doc/#{user.id}")
 
 		send_resp(conn, :no_content, "")
 	end

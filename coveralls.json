@@ -38,6 +38,7 @@
     "lib/commodity_api/generic/module_generate.ex",
     "lib/commodity_api/iam/generic/authorization_plug.ex",
     "lib/commodity_api/iam/error",
+    "lib/commodity_api/generic",
     "lib/mix"
   ]
 }

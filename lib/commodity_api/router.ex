@@ -80,6 +80,17 @@ defmodule Commodity.Router do
                         Iam.AccessControl.Passphrase.InvalidationController,
                         only: [:create],
                         assigns: %{name: "user/sign_out"}
+
+                options "/email",
+                        Iam.User.EmailController,
+                        :options
+                options "/email/:anything",
+                        Iam.User.EmailController,
+                        :options
+                resources "/email",
+                          Iam.User.EmailController,
+                          only: [:index, :show, :create, :update, :delete],
+                          assigns: %{name: "user/email"}
       end
     end
   end

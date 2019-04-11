@@ -18,6 +18,7 @@ defmodule Commodity.Api.Iam.User.EmailView do
 
 	def render("index.json", %{emails: emails}) do
 		%{data: render_many(emails.all, __MODULE__, "email.json"),
+		total_count: emails.total_count,
 		time_information: render_one(emails.time_information,
 			Commodity.Api.Util.TimeInformationView,
 			"time_information.json")}

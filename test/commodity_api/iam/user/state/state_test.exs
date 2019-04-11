@@ -20,14 +20,14 @@ defmodule Commodity.Api.Iam.User.StateTest do
 
 	test "changeset with valid params" do
 		changeset = State.changeset(%State{}, %{user_id: 1, source_user_id: 1,
-			state: "active", note: "Note"})
+			value: "active", note: "Note"})
 
 		assert changeset.valid?
 	end
 
 	test "changeset with invalid params" do
 		changeset = State.changeset(%State{}, %{user_id: "id",
-			source_user_id: "id", state: "unknown", note: false})
+			source_user_id: "id", value: "unknown", note: false})
 
 		refute changeset.valid?
 	end

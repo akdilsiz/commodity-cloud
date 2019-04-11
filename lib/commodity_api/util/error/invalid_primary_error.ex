@@ -13,17 +13,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Iam.User do
-	use Commodity.Api, :model
-
-	@derive {Jason.Encoder, only: [:id, :inserted_at]}
-
-	schema "users" do
-		field :inserted_at, :naive_datetime_usec, read_after_writes: true
-	end
-
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [])
-	end
+defmodule Commodity.Api.Util.Error.InvalidPrimaryError do
+	defexception [plug_status: 400, message: "This record is primary"]
 end

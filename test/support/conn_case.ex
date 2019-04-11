@@ -53,6 +53,8 @@ defmodule Commodity.ConnCase do
       import Commodity.Api.Util.Type.String
       import Commodity.Api.Util.Type.DateTime
 
+      alias Commodity.Elastic
+
       # The default endpoint for testing
       @endpoint Commodity.Endpoint
       @redis_keys Application.get_env(:commodity, :redis_keys)

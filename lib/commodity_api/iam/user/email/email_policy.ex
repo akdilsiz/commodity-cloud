@@ -13,17 +13,30 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Iam.User do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.User.EmailPolicy do
+	use Commodity.Api, :policy
 
-	@derive {Jason.Encoder, only: [:id, :inserted_at]}
-
-	schema "users" do
-		field :inserted_at, :naive_datetime_usec, read_after_writes: true
+	def index(conn, params, :self) do
+		policy(conn, params["user_id"])
 	end
 
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [])
+	def show(conn, params, :self) do
+		policy(conn, params["user_id"])
+	end
+
+	def create(conn, params, :self) do
+		policy(conn, params["user_id"])
+	end
+
+	def update(conn, params, :self) do
+		policy(conn, params["user_id"])
+	end
+
+	def delete(conn, params, :self) do
+		policy(conn, params["user_id"])
+	end
+
+	defp policy(conn, user_id) do
+		conn.assigns[:user_id] == String.to_integer(user_id)
 	end
 end

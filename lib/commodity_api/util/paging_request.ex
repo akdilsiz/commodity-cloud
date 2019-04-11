@@ -25,11 +25,13 @@ defmodule Commodity.Api.Util.PagingRequest do
 		field :order_by, :string, default: "desc"
 		field :order_field, :string, default: "id"
 		field :type, :string, default: "all"
+		field :state, Commodity.Api.Util.Type.Enum.State,
+			default: :active
 	end
 
 	def changeset(struct, params \\ %{}, order_field \\ []) do
 		struct
-		|> cast(params, [:limit, :offset, :order_by, :type])
+		|> cast(params, [:limit, :offset, :order_by, :type, :state])
 		|> validate_number(:limit, greater_than: 0, less_than: 41)
 		|> validate_inclusion(:order_by, ["asc", "desc"])
 		|> validate_inclusion(:order_field, order_field)

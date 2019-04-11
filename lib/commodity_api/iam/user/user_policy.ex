@@ -13,17 +13,20 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Iam.User do
-	use Commodity.Api, :model
+defmodule Commodity.Api.Iam.UserPolicy do
+	use Commodity.Api, :policy
 
-	@derive {Jason.Encoder, only: [:id, :inserted_at]}
+	def index(_conn, _params, _type), do: false
 
-	schema "users" do
-		field :inserted_at, :naive_datetime_usec, read_after_writes: true
+	def show(conn, params, :self) do
+		if conn.assigns[:user_id] == String.to_integer(params["id"]) do
+			true
+		else
+			false
+		end
 	end
 
-	def changeset(struct, params \\ %{}) do
-		struct
-		|> cast(params, [])
-	end
+	def create(_conn, _params, _type), do: false
+
+	def delete(_conn, _params, _type), do: false
 end

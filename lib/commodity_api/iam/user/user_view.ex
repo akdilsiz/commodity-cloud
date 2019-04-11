@@ -40,12 +40,20 @@ defmodule Commodity.Api.Iam.UserView do
 		else 
 			nil
 		end,
-		emails: render_many(user.emails, 
-			Commodity.Api.Iam.User.EmailView,
-			"email.json"),
-		phone_numbers: render_many(user.phone_numbers,
-			Commodity.Api.Iam.User.PhoneNumberView,
-			"phone_number.json"),
+		emails: if !is_nil(Map.get(user, :emails, nil)) do
+			render_many(user.emails, 
+				Commodity.Api.Iam.User.EmailView,
+				"email.json")
+		else
+			[]
+		end,
+		phone_numbers: if !is_nil(Map.get(user, :phone_numbers, nil)) do
+			render_many(user.phone_numbers,
+				Commodity.Api.Iam.User.PhoneNumberView,
+				"phone_number.json")
+		else
+			[]
+		end,
 		inserted_at: to_datetime(user.inserted_at)}
 	end
 end

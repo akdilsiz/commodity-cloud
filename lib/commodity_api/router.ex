@@ -108,6 +108,15 @@ defmodule Commodity.Router do
                                       only: [:index],
                                       assigns: %{name: "user/email/log"}
                           end
+
+                options "/password_assignment",
+                        Iam.User.PasswordAssignmentController,
+                        :options
+                resources "/password_assignment",
+                          Iam.User.PasswordAssignmentController,
+                          only: [:create],
+                          assigns: %{name: "user/password_assignment"}
+
       end
     end
   end

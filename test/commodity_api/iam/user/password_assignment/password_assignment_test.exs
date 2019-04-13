@@ -22,21 +22,28 @@ defmodule Commodity.Api.Iam.User.PasswordAssignmentTest do
 
 	test "changeset with valid params" do
 		changeset = PasswordAssignment.changeset(%PasswordAssignment{},
-			%{user_id: 1, password: "12345678pass"})
+			%{user_id: 1, source_user_id: 1, password: "12345678pass"})
 
 		assert changeset.valid?
 	end
 
 	test "changeset with invalid params" do
 		changeset = PasswordAssignment.changeset(%PasswordAssignment{},
-			%{user_id: "id", password: false})
+			%{user_id: "id", source_user_id: "id", password: false})
 
 		refute changeset.valid?
 	end
 
 	test "changeset without user_id param" do
 		changeset = PasswordAssignment.changeset(%PasswordAssignment{},
-			%{password: "12345678pass"})
+			%{source_user_id: 1, password: "12345678pass"})
+
+		refute changeset.valid?
+	end
+
+	test "changeset without source_user_id param" do
+		changeset = PasswordAssignment.changeset(%PasswordAssignment{},
+			%{user_id: 1, password: "12345678pass"})
 
 		refute changeset.valid?
 	end
@@ -50,14 +57,14 @@ defmodule Commodity.Api.Iam.User.PasswordAssignmentTest do
 
 	test "changeset with invalid password param if min length exceeded" do
 		changeset = PasswordAssignment.changeset(%PasswordAssignment{},
-			%{user_id: 1, password: "12345"})
+			%{user_id: 1, source_user_id: 1, password: "12345"})
 
 		refute changeset.valid?
 	end
 
 	test "changeset with invalid password param if max length exceeded" do
 		changeset = PasswordAssignment.changeset(%PasswordAssignment{},
-			%{user_id: 1, password: @lipsum})
+			%{user_id: 1, source_user_id: 1, password: @lipsum})
 
 		refute changeset.valid?
 	end

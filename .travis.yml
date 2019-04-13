@@ -1,0 +1,25 @@
+dist: trusty
+language: elixir
+elixir:
+  - 1.6.0
+otp_release:
+  - 20.0
+services: 
+  - redis
+  - postgresql
+  - elasticsearch
+  - rabbitmq
+sudo: required
+before_script:
+  - psql -c 'create user commodity login password 'commodity'; create database commodity_test;' -U postgres
+  - rabbitmqctl add_user local local
+  - rabbitmqctl set_user_tags local administrator
+  - rabbitmqctl set_permissions -p / local ".*" ".*" ".*"
+  - sleep 10
+install:
+  - mix local.hex --force
+  - mix local.rebar --force
+  - mix deps.get
+  - MIX_ENV=test mix do ecto.reset, test
+script:
+- mix coveralls.travis

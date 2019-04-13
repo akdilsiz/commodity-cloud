@@ -9,6 +9,13 @@ services:
   - postgresql
   - elasticsearch
   - rabbitmq
+addons:
+  postgresql: "10"
+  apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10
+    - postgresql-10-postgis-2.4
 sudo: required
 before_script:
   - psql -U postgres -c "create extension postgis"

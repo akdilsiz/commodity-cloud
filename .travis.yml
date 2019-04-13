@@ -1,20 +1,27 @@
 dist: trusty
 language: elixir
 elixir:
-  - 1.6.0
+  - 1.7.0
 otp_release:
-  - 20.0
+  - 21.0
 services: 
   - redis
   - postgresql
   - elasticsearch
   - rabbitmq
+addons:
+  postgresql: 9.6
+  apt:
+    packages:
+    - postgresql-9.6-postgis-2.3
 sudo: required
 before_script:
-  - psql -c 'create user commodity login password 'commodity'; create database commodity_test;' -U postgres
-  - rabbitmqctl add_user local local
-  - rabbitmqctl set_user_tags local administrator
-  - rabbitmqctl set_permissions -p / local ".*" ".*" ".*"
+  - psql -U postgres -c "create extension postgis"
+  - psql -U postgres -c "create user commodity superuser login password 'commodity'"
+  - psql -U postgres -c "create database commodity_test owner commodity"
+  - sudo rabbitmqctl add_user local local
+  - sudo rabbitmqctl set_user_tags local administrator
+  - sudo rabbitmqctl set_permissions -p / local ".*" ".*" ".*"
   - sleep 10
 install:
   - mix local.hex --force

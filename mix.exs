@@ -20,14 +20,14 @@ defmodule Commodity.MixProject do
     [
       app: :commodity,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.7",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
       test_coverage: [tool: ExCoveralls],
-      preferred_cli_env: [coveralls: :test, "coveralls.detail": :test, "coveralls.html": :test],
+      preferred_cli_env: [coveralls: :test, "coveralls.travis": :test, "coveralls.detail": :test, "coveralls.html": :test],
       #Documentation
       name: "Commodity Cloud",
       source_url: "http://github.com/akdilsiz/commodity-cloud",

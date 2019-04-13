@@ -17,7 +17,7 @@ defmodule Commodity.Api.Iam.AccessController.UserControllerTest do
 	use Commodity.ConnCase
 
 	alias Commodity.Factory
-	alias Commodity.Elastic
+	# alias Commodity.Elastic
 
 	test "create a user with valid params", %{conn: conn} do
 		conn = 
@@ -56,19 +56,19 @@ defmodule Commodity.Api.Iam.AccessController.UserControllerTest do
 		assert Enum.at(data["phone_numbers"], 0)["inserted_at"]
 		assert data["inserted_at"]
 
-		{:ok, response} = 
-			Elastic.get("/user/_doc/" <> to_string(data["id"]))
+		# {:ok, response} = 
+		# 	Elastic.get("/user/_doc/" <> to_string(data["id"]))
 
-		response = response["_source"]
+		# response = response["_source"]
 
-		assert response["id"] == data["id"]
-		assert response["personal_information"]["user_id"] == data["id"]
-		assert response["personal_information"]["given_name"] == "ABDULKADİR"
-		assert response["personal_information"]["family_name"] == "DİLSİZ"
-		assert response["personal_information"]["birthday"] == "1992-01-10"
-		assert response["personal_information"]["gender"] == "male"
-		assert response["personal_information"]["nationality"] == "TR"	
-		assert response["inserted_at"] == data["inserted_at"]
+		# assert response["id"] == data["id"]
+		# assert response["personal_information"]["user_id"] == data["id"]
+		# assert response["personal_information"]["given_name"] == "ABDULKADİR"
+		# assert response["personal_information"]["family_name"] == "DİLSİZ"
+		# assert response["personal_information"]["birthday"] == "1992-01-10"
+		# assert response["personal_information"]["gender"] == "male"
+		# assert response["personal_information"]["nationality"] == "TR"	
+		# assert response["inserted_at"] == data["inserted_at"]
 	end
 
 	test "should be 422 error create a user with invalid params", %{conn: conn} do

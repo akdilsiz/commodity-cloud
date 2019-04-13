@@ -19,9 +19,9 @@ before_script:
   - psql -U postgres -c "create extension postgis"
   - psql -U postgres -c "create user commodity login password 'commodity'"
   - psql -U postgres -c "create database commodity_test owner commodity"
-  - rabbitmqctl add_user local local
-  - rabbitmqctl set_user_tags local administrator
-  - rabbitmqctl set_permissions -p / local ".*" ".*" ".*"
+  - sudo rabbitmqctl add_user local local
+  - sudo rabbitmqctl set_user_tags local administrator
+  - sudo rabbitmqctl set_permissions -p / local ".*" ".*" ".*"
   - sleep 10
 install:
   - mix local.hex --force

@@ -99,6 +99,14 @@ defmodule Commodity.Router do
                                       Iam.User.Email.PrimaryController,
                                       only: [:create],
                                       assigns: %{name: "user/email/primary"}
+
+                            options "/log",
+                                    Iam.User.Email.LogController,
+                                    :options
+                            resources "/log",
+                                      Iam.User.Email.LogController,
+                                      only: [:index],
+                                      assigns: %{name: "user/email/log"}
                           end
       end
     end

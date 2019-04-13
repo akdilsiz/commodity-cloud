@@ -195,14 +195,19 @@ defmodule Commodity.Repo.Migrations.CreateUserAndPermissionTables do
 
   	create table(:user_password_assignments) do
       add :user_id, references(:users, 
-                              on_delete: :delete_all, 
-                              on_update: :update_all),
-                              null: false
+        on_delete: :delete_all, 
+        on_update: :update_all),
+        null: false
+      add :source_user_id, references(:users,
+          on_delete: :nilify_all,
+          on_update: :update_all),
+          null: true
       add :password_digest, :string, null: false
       add :inserted_at, :naive_datetime_usec, default: fragment("now()")
     end
 
     create index(:user_password_assignments, [:user_id], using: :btree)
+    create index(:user_password_assignments, [:source_user_id], using: :btree)
 
     create table(:user_passphrases) do
       add :user_id,

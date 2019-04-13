@@ -134,7 +134,8 @@ config :commodity, :redis_keys,
           address: %{all: "user:addresses",
                     one: "user:address",
                     primary: "user:address:primary"},
-          state: "user:state"}
+          state: "user:state",
+          password_assignment: %{one: "user:password_assignment"}}
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

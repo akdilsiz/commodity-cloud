@@ -18,8 +18,12 @@ defmodule Commodity.Api.Iam.User.PasswordAssignment do
 
 	import Comeonin.Bcrypt, only: [hashpwsalt: 1]
 
+	@derive {Jason.Encoder, only: [:id, :user_id, :source_user_id,
+		:password_digest, :inserted_at]}
+
 	schema "user_password_assignments" do
 		belongs_to :user, Commodity.Api.Iam.User
+		belongs_to :source_user, Commodity.Api.Iam.User
 
 		field :password_digest, :string
 		field :password, :string, virtual: true
@@ -29,10 +33,11 @@ defmodule Commodity.Api.Iam.User.PasswordAssignment do
 
 	def changeset(struct, params \\ %{}) do
 		struct
-		|> cast(params, [:user_id, :password])
-		|> validate_required([:user_id, :password])
+		|> cast(params, [:user_id, :source_user_id, :password])
+		|> validate_required([:user_id, :source_user_id, :password])
 		|> validate_length(:password, min: 8, max: 32)
 		|> foreign_key_constraint(:user_id)
+		|> foreign_key_constraint(:source_user_id)
 		|> hash_password!
 	end
 

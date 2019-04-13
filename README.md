@@ -1,6 +1,9 @@
 # .commodity
 Simple account management. For now :)
 
+[![Build Status](https://travis-ci.org/akdilsiz/commodity-cloud.svg?branch=master)](https://travis-ci.org/akdilsiz/commodity-cloud)
+[![Coverage Status](https://coveralls.io/repos/github/akdilsiz/commodity-cloud/badge.svg?branch=master)](https://coveralls.io/github/akdilsiz/commodity-cloud?branch=master)
+
 ## TODO
  - [x] Authentication/Authorization will be written.
  - [ ] Base modules(product, items, category vs.) will be written.

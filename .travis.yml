@@ -17,7 +17,7 @@ addons:
 sudo: required
 before_script:
   - psql -U postgres -c "create extension postgis"
-  - psql -U postgres -c "create user commodity login password 'commodity'"
+  - psql -U postgres -c "create user commodity superuser login password 'commodity'"
   - psql -U postgres -c "create database commodity_test owner commodity"
   - sudo rabbitmqctl add_user local local
   - sudo rabbitmqctl set_user_tags local administrator

@@ -123,7 +123,15 @@ defmodule Commodity.Router do
                 resources "/address",
                           Iam.User.AddressController,
                           only: [:index, :show, :create, :update],
-                          assigns: %{name: "user/address"}
+                          assigns: %{name: "user/address"} do
+                            options "/invalidate",
+                                    Iam.User.Address.InvalidationController,
+                                    :options
+                            resources "/invalidate",
+                                      Iam.User.Address.InvalidationController,
+                                      only: [:create],
+                                      assigns: %{name: "user/address/invalidate"}
+                          end
 
       end
     end

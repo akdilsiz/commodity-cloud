@@ -117,6 +117,14 @@ defmodule Commodity.Router do
                           only: [:create],
                           assigns: %{name: "user/password_assignment"}
 
+                options "/address",
+                        Iam.User.AddressController,
+                        :options
+                resources "/address",
+                          Iam.User.AddressController,
+                          only: [:index, :show, :create, :update],
+                          assigns: %{name: "user/address"}
+
       end
     end
   end

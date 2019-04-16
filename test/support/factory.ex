@@ -137,6 +137,14 @@ defmodule Commodity.Factory do
 		}
 	end
 
+	def user_address_log_factory do
+		%Commodity.Api.Iam.User.Address.Log{
+			user: build(:user),
+			address: build(:user_address),
+			source_user: build(:user)
+		}
+	end
+
 	def permission_factory do
 		%Commodity.Api.Iam.AccessControl.Permission{
 			controller_name: sequence(:permission_controller_name,

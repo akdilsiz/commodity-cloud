@@ -131,6 +131,14 @@ defmodule Commodity.Router do
                                       Iam.User.Address.InvalidationController,
                                       only: [:create],
                                       assigns: %{name: "user/address/invalidate"}
+
+                            options "/log",
+                                    Iam.User.Address.LogController,
+                                    :options
+                            resources "/log",
+                                      Iam.User.Address.LogController,
+                                      only: [:index],
+                                      assigns: %{name: "user/address/log"}
                           end
 
       end

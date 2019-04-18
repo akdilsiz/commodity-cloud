@@ -148,6 +148,17 @@ defmodule Commodity.Router do
                         Iam.User.PersonalInformationController,
                         only: [:create],
                         assigns: %{name: "user/personal_information"}
+
+              options "/phone_number",
+                        Iam.User.PhoneNumberController,
+                        :options
+              options "/phone_number/:anything",
+                      Iam.User.PhoneNumberController,
+                      :options
+              resources "/phone_number",
+                        Iam.User.PhoneNumberController,
+                        only: [:index, :show, :create, :update, :delete],
+                        assigns: %{name: "user/phone_number"}
       end
     end
   end

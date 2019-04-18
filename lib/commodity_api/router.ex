@@ -166,6 +166,14 @@ defmodule Commodity.Router do
                                     Iam.User.PhoneNumber.PrimaryController,
                                     only: [:create],
                                     assigns: %{name: "user/phone_number/primary"}
+
+                          options "/log",
+                                  Iam.User.PhoneNumber.LogController,
+                                  :options
+                          resources "/log",
+                                    Iam.User.PhoneNumber.LogController,
+                                    only: [:index],
+                                    assigns: %{name: "user/phone_number/log"}
                         end
       end
     end

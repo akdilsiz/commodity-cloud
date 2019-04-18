@@ -20,6 +20,8 @@ defmodule Commodity.Api.Iam.User do
 
 	schema "users" do
 		field :inserted_at, :naive_datetime_usec, read_after_writes: true
+
+		field :personal_information, :map, virtual: true
 	end
 
 	def changeset(struct, params \\ %{}) do

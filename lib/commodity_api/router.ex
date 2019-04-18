@@ -141,6 +141,13 @@ defmodule Commodity.Router do
                                       assigns: %{name: "user/address/log"}
                           end
 
+              options "/personal_information",
+                      Iam.User.PersonalInformationController,
+                      :options
+              resources "/personal_information",
+                        Iam.User.PersonalInformationController,
+                        only: [:create],
+                        assigns: %{name: "user/personal_information"}
       end
     end
   end

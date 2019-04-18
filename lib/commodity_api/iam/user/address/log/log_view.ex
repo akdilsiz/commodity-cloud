@@ -13,21 +13,21 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Iam.User.StateView do
+defmodule Commodity.Api.Iam.User.Address.LogView do
 	use Commodity.Api, :view
 
-	def render("show.json", %{state: state}) do
-		%{data: render_one(state.one, __MODULE__, "state.json"),
-		time_information: render_one(state.time_information,
+	def render("index.json", %{logs: logs}) do
+		%{data: render_many(logs.all, __MODULE__, "log.json"),
+		total_count: logs.total_count,
+		time_information: render_one(logs.time_information,
 			TimeInformationView,
 			"time_information.json")}
 	end
 
-	def render("state.json", %{state: state}) do
-		%{id: state.id,
-		user_id: state.user_id,
-		value: state.value,
-		note: state.note,
-		inserted_at: to_datetime(state.inserted_at)}
+	def render("log.json", %{log: log}) do
+		%{id: log.id,
+		user_id: log.user_id,
+		address_id: log.address_id,
+		inserted_at: NaiveDateTime.to_iso8601(log.inserted_at)}
 	end
 end

@@ -41,11 +41,18 @@ defmodule Commodity.Api.Iam.UserControllerTest do
 	end	
 
 	test "list all users", %{conn: conn} do
-		Factory.insert_list(10, :user)
-		|> Enum.map(fn x -> 
-			Factory.insert(:user_state, user: x, source_user: x,
+		users = Factory.insert_list(10, :user)
+		
+		for x <- 1..10 do 
+			user = Enum.at(users, x - 1)
+			Factory.insert(:user_state, user: user, source_user: user,
 				value: "active")
-		end)
+
+			if x > 6 do
+				Factory.insert(:user_phone_number, user: user,
+					value: "90511111111#{x}")
+			end
+		end
 
 		conn = get conn, iam_user_path(conn, :index)
 
@@ -99,6 +106,116 @@ defmodule Commodity.Api.Iam.UserControllerTest do
 	test "show a user with given identifier", %{conn: conn} do
 		user = Factory.insert(:user)
 
+		Factory.insert(:user_state, user: user, value: "active")
+		Factory.insert(:user_personal_information, user: user,
+			given_name: "Abdulkadir", family_name: "DILSIZ")
+
+		conn = get conn, iam_user_path(conn, :show, user.id)
+
+		data = json_response(conn, 200)
+
+		assert data["time_information"]
+
+		data = data["data"]
+		
+		assert data["id"] == user.id
+		assert data["emails"] == []
+		assert data["phone_numbers"] == []
+		assert data["personal_information"]["given_name"] == "Abdulkadir"
+		assert data["personal_information"]["family_name"] == "DILSIZ"
+		assert data["inserted_at"] == NaiveDateTime.to_iso8601(user.inserted_at)
+	end
+
+	test "show a user with given identifier and state param", %{conn: conn} do
+		user = Factory.insert(:user)
+
+		Factory.insert(:user_state, user: user, value: "active")
+		Factory.insert(:user_personal_information, user: user,
+			given_name: "Abdulkadir", family_name: "DILSIZ")
+
+		conn = get conn, iam_user_path(conn, :show, user.id), state: "active"
+
+		data = json_response(conn, 200)
+
+		assert data["time_information"]
+
+		data = data["data"]
+		
+		assert data["id"] == user.id
+		assert data["emails"] == []
+		assert data["phone_numbers"] == []
+		assert data["personal_information"]["given_name"] == "Abdulkadir"
+		assert data["personal_information"]["family_name"] == "DILSIZ"
+		assert data["inserted_at"] == NaiveDateTime.to_iso8601(user.inserted_at)
+	end
+
+	test "show a cached state spec user with given identifier", %{conn: conn} do
+		user = Factory.insert(:user)
+
+		state = Factory.insert(:user_state, user: user, value: "active")
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:user].state}:#{user.id}",
+				Jason.encode!(state))
+
+		Factory.insert(:user_personal_information, user: user,
+			given_name: "Abdulkadir", family_name: "DILSIZ")
+
+		conn = get conn, iam_user_path(conn, :show, user.id)
+
+		data = json_response(conn, 200)
+
+		assert data["time_information"]
+
+		data = data["data"]
+		
+		assert data["id"] == user.id
+		assert data["emails"] == []
+		assert data["phone_numbers"] == []
+		assert data["personal_information"]["given_name"] == "Abdulkadir"
+		assert data["personal_information"]["family_name"] == "DILSIZ"
+		assert data["inserted_at"] == NaiveDateTime.to_iso8601(user.inserted_at)
+	end
+
+	test "show a cached personal information spec user with given identifier", 
+		%{conn: conn} do
+		user = Factory.insert(:user)
+
+		Factory.insert(:user_state, user: user, value: "active")
+		personal_information = 
+			Factory.insert(:user_personal_information, user: user,
+				given_name: "Abdulkadir", family_name: "DILSIZ")
+
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:user].personal_information.one}:" <>
+				"#{user.id}", Jason.encode!(personal_information))
+
+		conn = get conn, iam_user_path(conn, :show, user.id)
+
+		data = json_response(conn, 200)
+
+		assert data["time_information"]
+
+		data = data["data"]
+		
+		assert data["id"] == user.id
+		assert data["emails"] == []
+		assert data["phone_numbers"] == []
+		assert data["personal_information"]["given_name"] == "Abdulkadir"
+		assert data["personal_information"]["family_name"] == "DILSIZ"
+		assert data["inserted_at"] == NaiveDateTime.to_iso8601(user.inserted_at)
+	end
+
+	test "show a cached user with given identifier", %{conn: conn} do
+		user = Factory.insert(:user)
+
+		{:ok, _} = Rediscl.Query.set("#{@redis_keys[:user].one}:#{user.id}", 
+			Jason.encode!(user))
+
+		state = Factory.insert(:user_state, user: user, value: "active")
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:user].state}:#{user.id}",
+				Jason.encode!(state))
+
 		conn = get conn, iam_user_path(conn, :show, user.id)
 
 		data = json_response(conn, 200)
@@ -113,11 +230,24 @@ defmodule Commodity.Api.Iam.UserControllerTest do
 		assert data["inserted_at"] == NaiveDateTime.to_iso8601(user.inserted_at)
 	end
 
-	test "show a cached user with given identifier", %{conn: conn} do
+	test "show a cached specs user with given identifier", %{conn: conn} do
 		user = Factory.insert(:user)
 
 		{:ok, _} = Rediscl.Query.set("#{@redis_keys[:user].one}:#{user.id}", 
 			Jason.encode!(user))
+
+		state = Factory.insert(:user_state, user: user, value: "active")
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:user].state}:#{user.id}",
+				Jason.encode!(state))
+
+		personal_information = 
+			Factory.insert(:user_personal_information, user: user,
+				given_name: "Abdulkadir", family_name: "DILSIZ")
+
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:user].personal_information.one}:" <>
+				"#{user.id}", Jason.encode!(personal_information))
 
 		conn = get conn, iam_user_path(conn, :show, user.id)
 
@@ -136,6 +266,37 @@ defmodule Commodity.Api.Iam.UserControllerTest do
 	test "should be 404 error show a user with given identifier", %{conn: conn} do
 		assert_error_sent 404, fn -> 
 			get conn, iam_user_path(conn, :show, 99999999)
+		end
+	end
+
+	test "should be 404 error show a cached user with given identifier " <>
+		"if state not cached", 
+		%{conn: conn} do
+		user = Factory.insert(:user)
+
+		{:ok, _} = Rediscl.Query.set("#{@redis_keys[:user].one}:#{user.id}", 
+			Jason.encode!(user))
+
+		state = Factory.insert(:user_state, user: user, value: "passive")
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:user].state}:#{user.id}",
+				Jason.encode!(state))
+
+		assert_error_sent 404, fn -> 
+			get conn, iam_user_path(conn, :show, user.id)
+		end
+	end
+
+	test "should be 404 error show a cached user with given identifier " <>
+		"user not active", 
+		%{conn: conn} do
+		user = Factory.insert(:user)
+
+		{:ok, _} = Rediscl.Query.set("#{@redis_keys[:user].one}:#{user.id}", 
+			Jason.encode!(user))
+
+		assert_error_sent 404, fn -> 
+			get conn, iam_user_path(conn, :show, user.id)
 		end
 	end
 

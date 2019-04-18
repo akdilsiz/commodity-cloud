@@ -53,12 +53,19 @@ defmodule Commodity.Api.Iam.UserController do
 						left_join: us2 in User.State,
 							on: us.user_id == us2.user_id and
 									us.id < us2.id,
+						left_join: upi in User.PersonalInformation,
+							on: u.id == upi.user_id,
+						left_join: upi2 in User.PersonalInformation,
+							on: upi.user_id == upi2.user_id and
+									upi.id < upi2.id,
 						where: is_nil(us2.id) and
+										is_nil(upi2.id) and
 										us.value == ^state,
 						limit: ^limit,
 						offset: ^offset,
 						order_by: ^order,
-						select: u
+						select: u,
+						select_merge: %{personal_information: upi}
 
 		users = Repo.all(query)
 
@@ -88,13 +95,58 @@ defmodule Commodity.Api.Iam.UserController do
 				time_information: conn.assigns[:time_information]}
 	end
 
-	def show(conn, %{"id" => id}) do
+	def show(conn, params) do
+		show(conn, params["id"], if is_nil(params["state"]) do
+			"active"
+		else
+			params["state"]
+		end)
+	end
+
+	defp show(conn, user_id, state) do
 		user =
-			case Rediscl.Query.get("#{@redis_keys[:user].one}:#{id}") do
+			case Rediscl.Query.get("#{@redis_keys[:user].one}:#{user_id}") do
 				{:ok, user} ->
-					Jason.decode!(user, [{:keys, :atoms!}])
+					user = Jason.decode!(user, [{:keys, :atoms!}])
+
+					case Rediscl.Query.mget(["#{@redis_keys[:user].state}:#{user_id}",
+						"#{@redis_keys[:user].personal_information.one}:#{user_id}"]) do
+						{:ok, [:undefined, _]} ->
+							raise Commodity.Api.Util.Error.InvalidNotFoundError
+						{:ok, [state, personal_information]} ->
+							state = Jason.decode!(state, [{:keys, :atoms!}])
+
+							if state.value == "active" do
+								Map.put(user, :personal_information, 
+									if personal_information == :undefined do
+										nil 
+									else
+										Jason.decode!(personal_information, [{:keys, :atoms!}])
+									end)
+							else
+								raise Commodity.Api.Util.Error.InvalidNotFoundError
+							end
+					end
 				_ ->
-					user = Repo.get!(User, id)
+					query = from u in User,
+									join: us in User.State,
+										on: u.id == us.user_id,
+									left_join: us2 in User.State,
+										on: us.user_id == us2.user_id and
+												us.id < us2.id,
+									left_join: upi in User.PersonalInformation,
+										on: u.id == upi.user_id,
+									left_join: upi2 in User.PersonalInformation,
+										on: upi.user_id == upi2.user_id and
+												upi.id < upi2.id,
+									where: is_nil(us2.id) and
+													is_nil(upi2.id) and
+													us.value == ^state and
+													u.id == ^user_id,
+									select: u,
+									select_merge: %{personal_information: upi}
+
+					user = Repo.one!(query)
 
 					Rediscl.Query.set("#{@redis_keys[:user].one}:#{user.id}",
 						Jason.encode!(user))

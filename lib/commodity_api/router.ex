@@ -117,6 +117,72 @@ defmodule Commodity.Router do
                           only: [:create],
                           assigns: %{name: "user/password_assignment"}
 
+                options "/address",
+                        Iam.User.AddressController,
+                        :options
+                resources "/address",
+                          Iam.User.AddressController,
+                          only: [:index, :show, :create, :update],
+                          assigns: %{name: "user/address"} do
+                            options "/invalidate",
+                                    Iam.User.Address.InvalidationController,
+                                    :options
+                            resources "/invalidate",
+                                      Iam.User.Address.InvalidationController,
+                                      only: [:create],
+                                      assigns: %{name: "user/address/invalidate"}
+
+                            options "/log",
+                                    Iam.User.Address.LogController,
+                                    :options
+                            resources "/log",
+                                      Iam.User.Address.LogController,
+                                      only: [:index],
+                                      assigns: %{name: "user/address/log"}
+                          end
+
+              options "/personal_information",
+                      Iam.User.PersonalInformationController,
+                      :options
+              resources "/personal_information",
+                        Iam.User.PersonalInformationController,
+                        only: [:create],
+                        assigns: %{name: "user/personal_information"}
+
+              options "/phone_number",
+                        Iam.User.PhoneNumberController,
+                        :options
+              options "/phone_number/:anything",
+                      Iam.User.PhoneNumberController,
+                      :options
+              resources "/phone_number",
+                        Iam.User.PhoneNumberController,
+                        only: [:index, :show, :create, :update, :delete],
+                        assigns: %{name: "user/phone_number"} do
+                          options "/make_primary",
+                                  Iam.User.PhoneNumber.PrimaryController,
+                                  :options
+                          resources "/make_primary",
+                                    Iam.User.PhoneNumber.PrimaryController,
+                                    only: [:create],
+                                    assigns: %{name: "user/phone_number/primary"}
+
+                          options "/log",
+                                  Iam.User.PhoneNumber.LogController,
+                                  :options
+                          resources "/log",
+                                    Iam.User.PhoneNumber.LogController,
+                                    only: [:index],
+                                    assigns: %{name: "user/phone_number/log"}
+                        end
+
+              options "/state",
+                      Iam.User.StateController,
+                      :options
+              resources "/state",
+                        Iam.User.StateController,
+                        only: [:create],
+                        assigns: %{name: "user/state"}
       end
     end
   end

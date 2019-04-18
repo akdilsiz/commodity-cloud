@@ -29,6 +29,9 @@ defmodule Commodity.Api.Iam.User.PhoneNumber do
 			read_after_writes: true
 
 		timestamps()
+
+		has_one :primary, Commodity.Api.Iam.User.PhoneNumber.Primary,
+			foreign_key: :number_id
 	end
 
 	def changeset(struct, params \\ %{}) do

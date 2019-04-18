@@ -13,6 +13,6 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ##   
-defmodule Commodity.Api.Util.InvalidNotFoundError do
+defmodule Commodity.Api.Util.Error.InvalidNotFoundError do
   defexception [plug_status: 404, message: "Not found"]
 end

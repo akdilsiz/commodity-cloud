@@ -13,21 +13,10 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ## 
-defmodule Commodity.Api.Iam.User.StateView do
-	use Commodity.Api, :view
+defmodule Commodity.Api.Iam.User.Address.InvalidationPolicy do
+	use Commodity.Api, :policy
 
-	def render("show.json", %{state: state}) do
-		%{data: render_one(state.one, __MODULE__, "state.json"),
-		time_information: render_one(state.time_information,
-			TimeInformationView,
-			"time_information.json")}
-	end
-
-	def render("state.json", %{state: state}) do
-		%{id: state.id,
-		user_id: state.user_id,
-		value: state.value,
-		note: state.note,
-		inserted_at: to_datetime(state.inserted_at)}
+	def create(conn, params, :self) do
+		conn.assigns[:user_id] == String.to_integer(params["user_id"])
 	end
 end

@@ -37,6 +37,11 @@ defmodule Commodity.Api.Iam.UserPolicyTest do
 		Factory.insert(:permission_set_grant, user: user, target_user: user,
 			permission_set: permission_set)
 
+		state = Factory.insert(:user_state, user: user, value: "active")
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:user].state}:#{user.id}",
+				Jason.encode!(state))
+
 		conn = get conn, iam_user_path(conn, :show, user.id)
 
 		assert conn.status == 200
@@ -50,6 +55,10 @@ defmodule Commodity.Api.Iam.UserPolicyTest do
 			permission_set: permission_set)
 
 		user = Factory.insert(:user)
+		state = Factory.insert(:user_state, user: user, value: "active")
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:user].state}:#{user.id}",
+				Jason.encode!(state))
 
 		conn = get conn, iam_user_path(conn, :show, user.id)
 
@@ -63,6 +72,11 @@ defmodule Commodity.Api.Iam.UserPolicyTest do
 		Factory.insert(:permission_set_grant, user: user, target_user: user,
 			permission_set: permission_set)
 
+		state = Factory.insert(:user_state, user: user, value: "active")
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:user].state}:#{user.id}",
+				Jason.encode!(state))
+
 		conn = post conn, iam_user_path(conn, :create)
 
 		assert conn.status == 403
@@ -75,6 +89,11 @@ defmodule Commodity.Api.Iam.UserPolicyTest do
 		Factory.insert(:permission_set_grant, user: user, target_user: user,
 			permission_set: permission_set)
 
+		state = Factory.insert(:user_state, user: user, value: "active")
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:user].state}:#{user.id}",
+				Jason.encode!(state))
+			
 		conn = delete conn, iam_user_path(conn, :delete, user.id)
 
 		assert conn.status == 403

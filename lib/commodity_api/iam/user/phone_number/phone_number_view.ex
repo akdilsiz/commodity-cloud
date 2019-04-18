@@ -18,6 +18,7 @@ defmodule Commodity.Api.Iam.User.PhoneNumberView do
 
 	def render("index.json", %{phone_numbers: phone_numbers}) do
 		%{data: render_many(phone_numbers.all, __MODULE__, "phone_number.json"),
+		total_count: phone_numbers.total_count,
 		time_information: render_one(phone_numbers.time_information,
 			Commodity.Api.Util.TimeInformationView,
 			"time_information.json")}

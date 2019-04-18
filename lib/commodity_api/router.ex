@@ -158,7 +158,15 @@ defmodule Commodity.Router do
               resources "/phone_number",
                         Iam.User.PhoneNumberController,
                         only: [:index, :show, :create, :update, :delete],
-                        assigns: %{name: "user/phone_number"}
+                        assigns: %{name: "user/phone_number"} do
+                          options "/make_primary",
+                                  Iam.User.PhoneNumber.PrimaryController,
+                                  :options
+                          resources "/make_primary",
+                                    Iam.User.PhoneNumber.PrimaryController,
+                                    only: [:create],
+                                    assigns: %{name: "user/phone_number/primary"}
+                        end
       end
     end
   end

@@ -65,14 +65,21 @@ defmodule Commodity.Api.Iam.User.PersonalInformationControllerTest do
 		assert {:ok, response} =
 			Elastic.get("/user/_doc/#{user.id}")
 
-		response = response["_source"]
+		send(self(), :ups)
 
-		assert response["id"] == user.id
-		assert response["personal_information"]["given_name"] == "Abdulkadir"
-		assert response["personal_information"]["family_name"] == "DILSIZ"
-		assert response["personal_information"]["gender"] == "male"
-		assert response["personal_information"]["nationality"] == "TR"
-		assert response["personal_information"]["birthday"] == "1992-01-10"
+		receive do
+			:ups -> :ok
+		after 
+			500 ->
+				response = response["_source"]
+
+				assert response["id"] == user.id
+				assert response["personal_information"]["given_name"] == "Abdulkadir"
+				assert response["personal_information"]["family_name"] == "DILSIZ"
+				assert response["personal_information"]["gender"] == "male"
+				assert response["personal_information"]["nationality"] == "TR"
+				assert response["personal_information"]["birthday"] == "1992-01-10"
+		end
 	end
 
 	test "should be 422 error create a user personal_information given given " <>

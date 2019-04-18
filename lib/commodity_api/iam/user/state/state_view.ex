@@ -26,7 +26,7 @@ defmodule Commodity.Api.Iam.User.StateView do
 	def render("state.json", %{state: state}) do
 		%{id: state.id,
 		user_id: state.user_id,
-		state: state.state,
+		value: state.value,
 		note: state.note,
 		inserted_at: to_datetime(state.inserted_at)}
 	end

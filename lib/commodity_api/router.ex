@@ -175,6 +175,14 @@ defmodule Commodity.Router do
                                     only: [:index],
                                     assigns: %{name: "user/phone_number/log"}
                         end
+
+              options "/state",
+                      Iam.User.StateController,
+                      :options
+              resources "/state",
+                        Iam.User.StateController,
+                        only: [:create],
+                        assigns: %{name: "user/state"}
       end
     end
   end

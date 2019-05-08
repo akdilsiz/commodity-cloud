@@ -43,14 +43,14 @@ defmodule Commodity.Router do
                 only: [:create],
                 assigns: %{name: "user/sign_in/token"}
 
-      options "/confirmation",
-              Iam.AccessControl.ConfirmationController,
-              :options
-      resources "/confirmation",
-                Iam.AccessControl.ConfirmationController,
-                only: [:show],
-                signleton: true,
-                assigns: %{name: "user/confirmation"}
+      # options "/confirmation",
+      #         Iam.AccessControl.ConfirmationController,
+      #         :options
+      # resources "/confirmation",
+      #           Iam.AccessControl.ConfirmationController,
+      #           only: [:show],
+      #           signleton: true,
+      #           assigns: %{name: "user/confirmation"}
 
       scope "/new", as: "new" do
         options "/",
@@ -185,5 +185,16 @@ defmodule Commodity.Router do
                         assigns: %{name: "user/state"}
       end
     end
+      
+    options "/brand",
+            BrandController,
+            :options
+    options "/brand/:anything",
+            BrandController,
+            :options
+    resources "/brand",
+              BrandController,
+              only: [:index, :show, :create, :delete],
+              assigns: %{name: "brand"}
   end
 end

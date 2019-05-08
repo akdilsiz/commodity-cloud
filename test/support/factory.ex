@@ -176,4 +176,8 @@ defmodule Commodity.Factory do
 			target_user: build(:user)
 		}
 	end
+
+	def brand_factory do
+		%Commodity.Api.Brand{}
+	end
 end

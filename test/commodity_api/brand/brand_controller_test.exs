@@ -68,8 +68,68 @@ defmodule Commodity.Api.BrandControllerTest do
 		assert Enum.count(data["data"]) == 10
 	end
 
+	test "list all brands and details", %{conn: conn} do
+		for _ <- 1..10 do
+			b = Factory.insert(:brand)
+
+			Factory.insert(:brand_detail, brand: b)
+		end
+
+		conn = get conn, brand_path(conn, :index)
+
+		data = json_response(conn, 200)
+
+		assert data["time_information"]
+		assert data["total_count"] == 10
+		assert Enum.count(data["data"]) == 10
+	end
+
+	test "list all brands and cached details", %{conn: conn} do
+		for _ <- 1..10 do
+			b = Factory.insert(:brand)
+
+			d = Factory.insert(:brand_detail, brand: b)
+
+			["#{@redis_keys[:brand].detail}:#{b.id}", Jason.encode!(d)]
+		end
+		|> List.flatten
+		|> Rediscl.Query.mset
+
+		conn = get conn, brand_path(conn, :index)
+
+		data = json_response(conn, 200)
+
+		assert data["time_information"]
+		assert data["total_count"] == 10
+		assert Enum.count(data["data"]) == 10
+	end
+
+	test "list all brands and a few cached details", %{conn: conn} do
+		for x <- 1..10 do
+			b = Factory.insert(:brand)
+
+			d = Factory.insert(:brand_detail, brand: b)
+
+			if x <= 5 do
+				["#{@redis_keys[:brand].detail}:#{b.id}", Jason.encode!(d)]				
+			end
+		end
+		|> Enum.filter(&(&1 != nil))
+		|> List.flatten
+		|> Rediscl.Query.mset
+
+		conn = get conn, brand_path(conn, :index)
+
+		data = json_response(conn, 200)
+
+		assert data["time_information"]
+		assert data["total_count"] == 10
+		assert Enum.count(data["data"]) == 10
+	end
+
 	test "show a brand with given identifier", %{conn: conn} do
 		brand = Factory.insert(:brand)
+		Factory.insert(:brand_detail, brand: brand, name: "Brand", slug: "brand")
 
 		conn = get conn, brand_path(conn, :show, brand.id)
 
@@ -80,6 +140,9 @@ defmodule Commodity.Api.BrandControllerTest do
 		data = data["data"]
 
 		assert data["id"] == brand.id
+		assert data["detail"]["brand_id"] == brand.id
+		assert data["detail"]["name"] == "Brand"
+		assert data["detail"]["slug"] == "brand"
 		assert data["inserted_at"] == NaiveDateTime.to_iso8601(brand.inserted_at)
 	
 		assert {:ok, _} =
@@ -89,9 +152,17 @@ defmodule Commodity.Api.BrandControllerTest do
 	test "show a cached brand with given identifier", %{conn: conn} do
 		brand = Factory.insert(:brand)
 
+		detail = 
+			Factory.insert(:brand_detail, brand: brand, name: "Brand", 
+				slug: "brand")
+
 		{:ok, "OK"} =
 			Rediscl.Query.set("#{@redis_keys[:brand].one}:#{brand.id}",
 				Jason.encode!(brand))
+
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:brand].detail}:#{brand.id}",
+				Jason.encode!(detail))
 
 		conn = get conn, brand_path(conn, :show, brand.id)
 
@@ -102,6 +173,34 @@ defmodule Commodity.Api.BrandControllerTest do
 		data = data["data"]
 
 		assert data["id"] == brand.id
+		assert data["detail"]["brand_id"] == brand.id
+		assert data["detail"]["name"] == "Brand"
+		assert data["detail"]["slug"] == "brand"
+		assert data["inserted_at"] == NaiveDateTime.to_iso8601(brand.inserted_at)
+	end
+
+	test "show a cached brand with given identifier, detail not cached", 
+		%{conn: conn} do
+		brand = Factory.insert(:brand)
+		
+		Factory.insert(:brand_detail, brand: brand, name: "Brand", slug: "brand")
+
+		{:ok, "OK"} =
+			Rediscl.Query.set("#{@redis_keys[:brand].one}:#{brand.id}",
+				Jason.encode!(brand))	
+
+		conn = get conn, brand_path(conn, :show, brand.id)
+
+		data = json_response(conn, 200)
+
+		assert data["time_information"]
+
+		data = data["data"]
+
+		assert data["id"] == brand.id
+		assert data["detail"]["brand_id"] == brand.id
+		assert data["detail"]["name"] == "Brand"
+		assert data["detail"]["slug"] == "brand"
 		assert data["inserted_at"] == NaiveDateTime.to_iso8601(brand.inserted_at)
 	end
 
@@ -113,7 +212,9 @@ defmodule Commodity.Api.BrandControllerTest do
 	end
 
 	test "creaet a brand with valid params", %{conn: conn} do
-		conn = post conn, brand_path(conn, :create), brand: %{}
+		conn = 
+			post conn, brand_path(conn, :create), 
+			brand: %{detail: %{name: "Brand", slug: "brand"}}
 
 		data = json_response(conn, 201)
 
@@ -122,6 +223,9 @@ defmodule Commodity.Api.BrandControllerTest do
 		data = data["data"]
 
 		assert data["id"]
+		assert data["detail"]["brand_id"] == data["id"]
+		assert data["detail"]["name"] == "Brand"
+		assert data["detail"]["slug"] == "brand"
 		assert data["inserted_at"]
 
 		assert {:ok, cached_brand} = 
@@ -131,6 +235,34 @@ defmodule Commodity.Api.BrandControllerTest do
 
 		assert cached_brand.id == data["id"]
 		assert cached_brand.inserted_at == data["inserted_at"]
+
+		assert {:ok, cached_detail} = 
+			Rediscl.Query.get("#{@redis_keys[:brand].detail}:" <> 
+				to_string(data["id"]))
+
+		cached_detail = Jason.decode!(cached_detail, [{:keys, :atoms!}])
+
+		assert cached_detail.brand_id == data["id"]
+		assert cached_detail.name == "Brand"
+		assert cached_detail.slug == "brand"
+	end
+
+	test "should be 422 error create a brand without detail param",
+		%{conn: conn} do
+		conn = 
+			post conn, brand_path(conn, :create),
+			brand: %{}
+
+		assert conn.status == 422		
+	end
+
+	test "should be 422 error create a brand with invalid detail params",
+		%{conn: conn} do
+		conn =
+			post conn, brand_path(conn, :create),
+			brand: %{detail: %{name: false, slug: 12.33}}	
+
+		assert conn.status == 422
 	end
 
 	test "delete a brand with given identifier", %{conn: conn} do

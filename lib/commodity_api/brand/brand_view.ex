@@ -33,6 +33,12 @@ defmodule Commodity.Api.BrandView do
 
 	def render("brand.json", %{brand: brand}) do
 		%{id: brand.id,
+		detail: case Map.get(brand, :detail, nil) do
+			nil ->
+				nil
+			detail ->
+				render_one(detail, Commodity.Api.Brand.DetailView, "detail.json")
+		end,
 		inserted_at: to_datetime(brand.inserted_at)}
 	end
 end

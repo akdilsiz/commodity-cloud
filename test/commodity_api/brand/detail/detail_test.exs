@@ -19,21 +19,28 @@ defmodule Commodity.Api.Brand.DetailTest do
 	alias Commodity.Api.Brand.Detail
 
 	test "changeset with valid params" do
-		changeset = Detail.changeset(%Detail{}, %{name: "Brand",
+		changeset = Detail.changeset(%Detail{}, %{brand_id: 1, name: "Brand",
 			slug: "brand", source_user_id: 1})
 
 		assert changeset.valid?
 	end
 
 	test "changeset with invalid params" do
-		changeset = Detail.changeset(%Detail{}, %{name: false,
+		changeset = Detail.changeset(%Detail{}, %{brand_id: "id", name: false,
 			slug: 123.23, source_user_id: "id"})
 
 		refute changeset.valid?
 	end
 
+	test "changeset without brand_id param" do
+		changeset = Detail.changeset(%Detail{}, %{name: "Brand",
+			slug: "brand", source_user_id: 1})
+
+		refute changeset.valid?
+	end
+
 	test "changeset without name param" do
-		changeset = Detail.changeset(%Detail{}, %{slug: "brand",
+		changeset = Detail.changeset(%Detail{}, %{brand_id: 1, slug: "brand",
 			source_user_id: 1})
 
 		refute changeset.valid?

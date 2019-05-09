@@ -20,10 +20,12 @@ defmodule Commodity.Api.Brand do
 
 	schema "brands" do
 		field :inserted_at, :naive_datetime_usec, read_after_writes: true
+
+		field :detail, :map, virtual: true
 	end
 
 	def changeset(struct, params \\ %{}) do
 		struct
-		|> cast(params, [])
+		|> cast(params, [:detail])
 	end
 end

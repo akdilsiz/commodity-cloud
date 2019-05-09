@@ -7,7 +7,7 @@ defmodule Commodity.Repo.Migrations.CreateCompanyAndBrandTables do
   	end
 
   	create table(:company_details) do
-      add :company_id, references(:companies,]
+      add :company_id, references(:companies,
         on_delete: :delete_all,
         on_update: :update_all),
         null: false

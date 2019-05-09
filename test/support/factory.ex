@@ -180,4 +180,13 @@ defmodule Commodity.Factory do
 	def brand_factory do
 		%Commodity.Api.Brand{}
 	end
+
+	def brand_detail_factory do
+		%Commodity.Api.Brand.Detail{
+			brand: build(:brand),
+			name: sequence(:brand_detail_name, &"Detail #{&1}"),
+			slug: sequence(:brand_detail_slug, &"detail-#{&1}"),
+			source_user: build(:user)
+		}
+	end
 end

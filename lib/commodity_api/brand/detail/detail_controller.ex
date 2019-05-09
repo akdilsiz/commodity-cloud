@@ -26,7 +26,9 @@ defmodule Commodity.Api.Brand.DetailController do
 	def options(conn, _params), do: send_resp(conn, :no_content, "")
 
 	def create(conn, %{"brand_id" => brand_id, "detail" => detail_params}) do
-		detail_params = Map.put(detail_params, "brand_id", brand_id)
+		detail_params = 
+			Map.put(detail_params, "brand_id", brand_id)
+			|> Map.put("source_user_id", conn.assigns[:user_id])
 
 		changeset = Detail.changeset(%Detail{}, detail_params)
 
@@ -37,7 +39,24 @@ defmodule Commodity.Api.Brand.DetailController do
 				Repo.rollback(detail)
 			end
 
-			{:ok, ""}
+			{:ok, "OK"} =
+				Rediscl.Query.set("#{@redis_keys[:brand].detail}:#{brand_id}",
+					Jason.encode!(detail))
+
+			detail
 		end) 
+
+		case transaction do
+			{:ok, detail} ->
+				conn
+				|> put_status(:created)
+				|> render("show.json", detail: %{one: detail,
+					time_information: conn.assigns[:time_information]})
+			{:error, changeset} ->
+				conn
+				|> put_status(:unprocessable_entity)
+				|> put_view(ChangesetView)
+				|> render("error.json", changeset: changeset)
+		end
 	end
 end

@@ -136,7 +136,9 @@ config :commodity, :redis_keys,
                     primary: "user:address:primary"},
           state: "user:state",
           password_assignment: %{one: "user:password_assignment"}},
-  brand: %{all: "brands", one: "brand"}
+  brand: %{all: "brands", one: "brand",
+          detail: "brand:detail",
+          slug: "brand:slug"}
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

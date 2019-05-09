@@ -195,6 +195,14 @@ defmodule Commodity.Router do
     resources "/brand",
               BrandController,
               only: [:index, :show, :create, :delete],
-              assigns: %{name: "brand"}
+              assigns: %{name: "brand"} do
+                options "/detail",
+                        Brand.DetailController,
+                        :options
+                resources "/detail",
+                          Brand.DetailController,
+                          only: [:create],
+                          assigns: %{name: "brand/detail"}
+              end
   end
 end

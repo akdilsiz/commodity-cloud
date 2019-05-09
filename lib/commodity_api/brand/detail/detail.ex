@@ -16,6 +16,9 @@
 defmodule Commodity.Api.Brand.Detail do
 	use Commodity.Api, :model
 
+	@derive {Jason.Encoder, only: [:id, :brand_id, :name, :slug,
+		:source_user_id, :inserted_at]}
+
 	schema "brand_details" do
 		belongs_to :brand, Commodity.Api.Brand
 		
